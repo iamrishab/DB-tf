@@ -7,14 +7,7 @@ cfg = edict()
 cfg.MEANS = [123.68, 116.78, 103.94]
 cfg.INPUT_MAX_SIZE = 720
 cfg.GEOMETRY = 'RBOX'
-# -1采用原始lanms, >=0 <=1使用最新的lanms
-cfg.LONG_MERGE_THRESHOLD = 0.5
-# 进行合并的阈值
-cfg.LANMS_THRESHOLD = 0.4
-# 进行nms的阈值
-cfg.NMS_THRESHOLD = 0.3
-cfg.EXP_BOX = {'right_ratio': 0, 'left_ratio': 0, 'is_exp': False}
-cfg.IS_ASPP = False
+cfg.K = 10
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~train config~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 save_data_name = '1211'
@@ -163,4 +156,3 @@ cfg.TRAIN.MIN_CROP_SIDE_RATIO = 0.00001
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~evalue~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 cfg.TRAIN.EVAL_ORG_DIR = '/share/zzh/east_data/test_data/org/'
 cfg.TRAIN.EVAL_RES_DIR = '/root/east_data/eval_res'
-
