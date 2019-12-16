@@ -1,6 +1,7 @@
 import tensorflow as tf
+from db_config import cfg
 
-def dice_coefficient(y_true_cls, y_pred_cls,
+def dice_coefficient_loss(y_true_cls, y_pred_cls,
                      training_mask):
     '''
     dice loss
@@ -16,13 +17,28 @@ def dice_coefficient(y_true_cls, y_pred_cls,
     tf.summary.scalar('classification_dice_loss', loss)
     return loss
 
+def balance_cross_entropy_loss(gt, pred, mask,
+                               negative_ratio=3.0, eps=1e-6):
+    positive = gt * mask
+    negative = (1 - gt) * mask
+    positive_count = tf.reduce_sum(positive)
+    negative_count = tf.minimum(tf.reduce_sum(negative), tf.int32(positive_count * negative_ratio))
+    gt = tf.reshape(gt, [-1, 1])
+    pred = tf.reshape(pred, [-1, 1])
+    cross_entropy = tf.nn.sigmoid_cross_entropy_with_logits(labels=gt, logits=pred)
+    positive_loss = cross_entropy * positive
+    negative_loss = cross_entropy * negative
+    negative_loss, _ = tf.nn.top_k(tf.reshape(negative_loss, -1), negative_count)
 
-def softmax_cross_entropy(y_true_cls, y_pred_cls,
-                     training_mask):
+    balance_loss = (tf.reduce_sum(positive_loss) + tf.reduce_sum(negative_loss)) / (positive_count + negative_count + eps)
+
+    return balance_loss
+
+def softmax_cross_entropy_loss(y_true_cls, y_pred_cls, training_mask):
     '''
     softmax_cross_entropy(SCE) loss
-    :param y_true_cls:[bs,w,h,3]
-    :param y_pred_cls:[bs,w,h,3]
+    :param y_true_cls:[bs,w,h,N]
+    :param y_pred_cls:[bs,w,h,N]
     :param training_mask:
     :return:
     '''
@@ -33,13 +49,12 @@ def softmax_cross_entropy(y_true_cls, y_pred_cls,
     y_true_cls = y_true_cls * training_mask + add_mask
     y_pred_cls = y_pred_cls * training_mask + add_mask
 
-    y_true_cls = tf.reshape(y_true_cls, [-1, 3])
-    y_pred_cls = tf.reshape(y_pred_cls, [-1, 3])
+    y_true_cls = tf.reshape(y_true_cls, [-1, tf.shape(y_true_cls)[-1]])
+    y_pred_cls = tf.reshape(y_pred_cls, [-1, tf.shape(y_true_cls)[-1]])
 
     cross_entropy = tf.nn.softmax_cross_entropy_with_logits(labels=y_true_cls, logits=y_pred_cls)
     cls_loss = tf.reduce_mean(cross_entropy)
 
-    # tf.summary.scalar('classification_sce_loss', cls_loss)
     return cls_loss
 
 
@@ -63,14 +78,16 @@ def smooth_l1_loss(pred, gt, mask, sigma=1.0):
                + (abs_diff - (0.5 / sigma_2)) * (1.0 - smoothL1_sign)
     return loss
 
-
 def compute_loss(binarize_map, threshold_map, thresh_binary,
                  gt_score_maps, gt_threshold_map, gt_score_mask, gt_thresh_mask):
 
-    binarize_loss = dice_coefficient(gt_score_maps, binarize_map, gt_score_mask)
+    binarize_loss = balance_cross_entropy_loss(gt_score_maps, binarize_map, gt_score_mask)
     threshold_loss = smooth_l1_loss(threshold_map, gt_threshold_map, gt_thresh_mask)
-    thresh_binary_loss = dice_coefficient(gt_score_maps, thresh_binary, gt_score_mask)
-    pass
+    thresh_binary_loss = dice_coefficient_loss(gt_score_maps, thresh_binary, gt_score_mask)
+
+    model_loss = cfg.TRAIN.LOSS_ALPHA * binarize_loss + cfg.TRAIN.LOSS_BETA * threshold_loss + thresh_binary_loss
+
+    return model_loss
 
 
 
