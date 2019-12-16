@@ -42,9 +42,11 @@ class DB():
 
         boxes, scores = self.decoder([img], binarize_map, threshold_map, thresh_binary, True)
         # print(info)
-        print(boxes)
-        for box in boxes:
-            cv2.polylines(img, [np.array(box).astype(np.int).reshape([-1, 1, 2])], True, (0, 255, 0))
+        # print(boxes.shape)
+        for box in boxes[0]:
+            print(box)
+            print(box.shape)
+            cv2.polylines(img, [box.astype(np.int).reshape([-1, 1, 2])], True, (0, 255, 0))
         cv2.imwrite('show.jpg', img)
 
 
