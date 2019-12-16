@@ -5,6 +5,9 @@ from shapely.geometry import Polygon
 import pyclipper
 from db_config import cfg
 
+import warnings
+warnings.filterwarnings('ignore')
+
 def _distance(xs, ys, point_1, point_2):
     '''
     compute the distance from point to a line
@@ -92,18 +95,18 @@ def make_score_map(text_polys, tags, h, w):
 def make_border_map(text_polys, tags, h, w):
 
     canvas = np.zeros([h, w], dtype=np.float32)
-    mask = np.zeros(h, w, dtype=np.float32)
+    mask = np.zeros([h, w], dtype=np.float32)
 
     for i in range(len(text_polys)):
         if tags[i]:
             continue
-        _draw_border_map(text_polys[i], canvas, mask=mask)
+        canvas, mask = _draw_border_map(text_polys[i], canvas, mask)
     threshold_map = canvas * (cfg.THRESH_MAX - cfg.THRESH_MIN) + cfg.THRESH_MIN
 
     return threshold_map, mask
 
 def _draw_border_map(poly, canvas, mask):
-    poly = np.array(poly)
+    poly = np.array(poly).copy()
     assert poly.ndim == 2
     assert poly.shape[1] == 2
 
@@ -138,7 +141,7 @@ def _draw_border_map(poly, canvas, mask):
         (poly.shape[0], height, width), dtype=np.float32)
     for i in range(poly.shape[0]):
         j = (i + 1) % poly.shape[0]
-        absolute_distance = distance(xs, ys, poly[i], poly[j])
+        absolute_distance = _distance(xs, ys, poly[i], poly[j])
         distance_map[i] = np.clip(absolute_distance / distance, 0, 1)
     distance_map = distance_map.min(axis=0)
 
@@ -151,3 +154,5 @@ def _draw_border_map(poly, canvas, mask):
             ymin_valid - ymin:ymax_valid - ymax + height,
             xmin_valid - xmin:xmax_valid - xmax + width],
         canvas[ymin_valid:ymax_valid + 1, xmin_valid:xmax_valid + 1])
+
+    return canvas, mask
