@@ -22,14 +22,16 @@ def balance_cross_entropy_loss(gt, pred, mask,
     positive = gt * mask
     negative = (1 - gt) * mask
     positive_count = tf.reduce_sum(positive)
-    negative_count = tf.minimum(tf.reduce_sum(negative), tf.int32(positive_count * negative_ratio))
+    negative_count = tf.minimum(tf.reduce_sum(negative), positive_count * negative_ratio)
+    negative_count = tf.cast(negative_count, tf.int32)
     gt = tf.reshape(gt, [-1, 1])
     pred = tf.reshape(pred, [-1, 1])
     cross_entropy = tf.nn.sigmoid_cross_entropy_with_logits(labels=gt, logits=pred)
     positive_loss = cross_entropy * positive
     negative_loss = cross_entropy * negative
-    negative_loss, _ = tf.nn.top_k(tf.reshape(negative_loss, -1), negative_count)
+    negative_loss, _ = tf.nn.top_k(tf.reshape(negative_loss, [-1]), negative_count)
 
+    negative_count = tf.cast(negative_count, tf.float32)
     balance_loss = (tf.reduce_sum(positive_loss) + tf.reduce_sum(negative_loss)) / (positive_count + negative_count + eps)
 
     return balance_loss
@@ -66,23 +68,21 @@ def smooth_l1_loss(pred, gt, mask, sigma=1.0):
     :param sigma:
     :return:
     '''
-    sigma_2 = sigma**2
+    sigma2 = sigma**2
 
     diff = pred * mask - gt
 
-    abs_diff = tf.abs(diff)
-
-    smoothL1_sign = tf.stop_gradient(
-        tf.to_float(tf.less(abs_diff, 1. / sigma_2)))
-    loss = tf.pow(diff, 2) * (sigma_2 / 2.0) * smoothL1_sign \
-               + (abs_diff - (0.5 / sigma_2)) * (1.0 - smoothL1_sign)
-    return loss
+    with tf.name_scope('smooth_l1_loss'):
+        deltas_abs = tf.abs(diff)
+        smoothL1_sign = tf.cast(tf.less(deltas_abs, 1.0 / sigma2), tf.float32)
+        return tf.square(diff) * 0.5 * sigma2 * smoothL1_sign + \
+               (deltas_abs - 0.5 / sigma2) * tf.abs(smoothL1_sign - 1)
 
 def compute_loss(binarize_map, threshold_map, thresh_binary,
                  gt_score_maps, gt_threshold_map, gt_score_mask, gt_thresh_mask):
 
-    binarize_loss = balance_cross_entropy_loss(gt_score_maps, binarize_map, gt_score_mask)
-    threshold_loss = smooth_l1_loss(threshold_map, gt_threshold_map, gt_thresh_mask)
+    binarize_loss = dice_coefficient_loss(gt_score_maps, binarize_map, gt_score_mask)
+    threshold_loss = tf.reduce_mean(smooth_l1_loss(threshold_map, gt_threshold_map, gt_thresh_mask))
     thresh_binary_loss = dice_coefficient_loss(gt_score_maps, thresh_binary, gt_score_mask)
 
     model_loss = cfg.TRAIN.LOSS_ALPHA * binarize_loss + cfg.TRAIN.LOSS_BETA * threshold_loss + thresh_binary_loss
