@@ -149,10 +149,14 @@ def _draw_border_map(poly, canvas, mask):
     xmax_valid = min(max(0, xmax), canvas.shape[1] - 1)
     ymin_valid = min(max(0, ymin), canvas.shape[0] - 1)
     ymax_valid = min(max(0, ymax), canvas.shape[0] - 1)
+    # print(xmin_valid, xmax_valid, ymin_valid, ymax_valid)
+    # print(xmin, xmax, ymin, ymax)
+    # print(distance_map.shape)
+    # print(distance_map[
+    #         ymin_valid - ymin:ymax_valid - ymax + height,
+    #         xmin_valid - xmin:xmax_valid - xmax + width].shape)
     canvas[ymin_valid:ymax_valid + 1, xmin_valid:xmax_valid + 1] = np.fmax(
-        1 - distance_map[
-            ymin_valid - ymin:ymax_valid - ymax + height,
-            xmin_valid - xmin:xmax_valid - xmax + width],
+        1 - distance_map[ymin_valid - ymin:ymax_valid - ymax + height, xmin_valid - xmin:xmax_valid - xmax + width],
         canvas[ymin_valid:ymax_valid + 1, xmin_valid:xmax_valid + 1])
 
     return canvas, mask

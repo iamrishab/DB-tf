@@ -119,7 +119,7 @@ def main():
     # add summary
     tf.summary.scalar('learning_rate', learning_rate)
 
-    gpus = cfg.TRAIN.VIS_GPU.split(',')
+    gpus = [str(i) for i in range(len(cfg.TRAIN.VIS_GPU.split(',')))]
     input_images_split = tf.split(input_images, len(gpus))
     input_score_maps_split = tf.split(input_score_maps, len(gpus))
     input_threshold_maps_split = tf.split(input_threshold_maps, len(gpus))
