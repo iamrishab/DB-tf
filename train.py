@@ -71,7 +71,7 @@ def _train_logger_init():
     train_logger.setLevel(logging.DEBUG)
 
     # 添加文件输出
-    log_file = cfg["TRAIN"]["TRAIN_LOGS"] + time.strftime('%Y%m%d%H%M', time.localtime(time.time())) + '.logs'
+    log_file = os.path.join(cfg["TRAIN"]["TRAIN_LOGS"], time.strftime('%Y%m%d%H%M', time.localtime(time.time())) + '.logs')
     file_handler = logging.FileHandler(log_file, mode='w')
     file_handler.setLevel(logging.DEBUG)
     file_formatter = logging.Formatter('%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s')
@@ -191,7 +191,7 @@ def main():
             assert 0, 'load error'
 
         data_generator = get_batch(num_workers=cfg["TRAIN"]["NUM_READERS"],
-                                   batch_size=cfg["TRAIN"]["BATCH_SIZE_PER_GPU"] * len(gpus))
+                                   batchsize=cfg["TRAIN"]["BATCH_SIZE_PER_GPU"] * len(gpus))
 
         start = time.time()
         for step in range(cfg["TRAIN"]["MAX_STEPS"]):
