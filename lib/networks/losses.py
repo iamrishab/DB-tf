@@ -14,7 +14,6 @@ def dice_coefficient_loss(y_true_cls, y_pred_cls,
     intersection = tf.reduce_sum(y_true_cls * y_pred_cls * training_mask)
     union = tf.reduce_sum(y_true_cls * training_mask) + tf.reduce_sum(y_pred_cls * training_mask) + eps
     loss = 1. - (2 * intersection / union)
-    tf.summary.scalar('classification_dice_loss', loss)
     return loss
 
 def balance_cross_entropy_loss(gt, pred, mask,
@@ -87,6 +86,9 @@ def compute_loss(binarize_map, threshold_map, thresh_binary,
 
     model_loss = cfg.TRAIN.LOSS_ALPHA * binarize_loss + cfg.TRAIN.LOSS_BETA * threshold_loss + thresh_binary_loss
 
+    tf.summary.scalar('binarize_loss', binarize_loss)
+    tf.summary.scalar('threshold_loss', threshold_loss)
+    tf.summary.scalar('thresh_binary_loss', thresh_binary_loss)
     return model_loss
 
 
