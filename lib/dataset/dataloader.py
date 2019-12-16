@@ -95,16 +95,16 @@ def generator(batchsize, random_scale=np.array(cfg.TRAIN.IMG_SCALE)):
                 h, w, _ = img_input.shape
 
                 polys, tags = load_labels(label_path)
-                polys[:, 0] *= ratio_w
-                polys[:, 1] *= ratio_h
-                polys = polys.tolist()
+                polys[:, :, 0] *= ratio_w
+                polys[:, :, 1] *= ratio_h
+                # polys = polys.astype(np.int).tolist()
                 score_map, score_mask, threshold_map, thresh_mask = make_train_labels(polys, tags, h, w)
 
                 train_imgs.append(img_input)
-                train_score_maps.append(score_map)
-                train_socre_masks.append(score_mask)
-                train_thresh_maps.append(threshold_map)
-                train_thresh_masks.append(thresh_mask)
+                train_score_maps.append(score_map[:, :, np.newaxis])
+                train_socre_masks.append(score_mask[:, :, np.newaxis])
+                train_thresh_maps.append(threshold_map[:, :, np.newaxis])
+                train_thresh_masks.append(thresh_mask[:, :, np.newaxis])
 
                 if len(train_imgs) == batchsize:
                     yield train_imgs, train_score_maps, train_socre_masks, train_thresh_maps, train_thresh_masks
@@ -118,6 +118,12 @@ def generator(batchsize, random_scale=np.array(cfg.TRAIN.IMG_SCALE)):
                 import traceback
                 traceback.print_exc()
                 print(img_path)
+                print(polys[0])
+                img_input = img_input.astype(np.int)
+                for poly in polys:
+                    poly = np.array(poly, dtype=np.int)
+                    cv2.polylines(img_input, [poly.reshape((-1, 1, 2))], True, (0, 255, 0))
+                cv2.imwrite(img_name, img_input)
                 continue
 
 
