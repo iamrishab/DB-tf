@@ -18,7 +18,7 @@ cfg.TRAIN = edict()
 cfg.TRAIN.VERSION = '1216'
 # 多gpu训练
 cfg.TRAIN.VIS_GPU = '5,6'
-cfg.TRAIN.BATCH_SIZE_PER_GPU = 8
+cfg.TRAIN.BATCH_SIZE_PER_GPU = 2
 cfg.TRAIN.LOSS_ALPHA = 1.0
 cfg.TRAIN.LOSS_BETA = 10.0
 
