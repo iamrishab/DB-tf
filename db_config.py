@@ -15,12 +15,13 @@ cfg.MIN_TEXT_SIZE = 1
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~train config~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 cfg.TRAIN = edict()
-cfg.TRAIN.VERSION = '' + '_'
+cfg.TRAIN.VERSION = '1216'
 # 多gpu训练
-cfg.TRAIN.GPU_LIST = '0,1'
 cfg.TRAIN.VIS_GPU = '1,2'
 # batchsize 大小
 cfg.TRAIN.BATCH_SIZE_PER_GPU = 12
+cfg.TRAIN.LOSS_ALPHA = 1.0
+cfg.TRAIN.LOSS_BETA = 10.0
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~dataload & aug~~~~~~~~~~~~~~~~~~~~~~~~~~
 cfg.TRAIN.IMG_DIR = ''
