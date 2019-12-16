@@ -85,7 +85,7 @@ def model(images, weight_decay=1e-5, is_training=True):
                         concat_feature = conv_f
                     else:
                         up_f = slim.conv2d(f, 256, 3)
-                        unpool(up_f, 2**i)
+                        up_f = unpool(up_f, 2**i)
                         concat_feature = tf.concat([concat_feature, up_f], axis=-1)
 
                 final_f = slim.conv2d(concat_feature, 256, 3)
