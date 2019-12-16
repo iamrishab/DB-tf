@@ -29,13 +29,13 @@ def load_labels(gt_path):
             poly = np.array(pts) + [x, y] * 14
             polys.append(poly.reshape([-1, 2]))
             tags.append(False)
-    return polys, tags
+    return np.array(polys, np.float), tags
 
 
 def resize_img(img, max_size=736):
     h, w, _ = img.shape
 
-    if max(h, w) <= max_size:
+    if max(h, w) > max_size:
         ratio = float(max_size) / h if h > w else float(max_size) / w
     else:
         ratio = 1.
@@ -86,18 +86,18 @@ def generator(batchsize, random_scale=np.array(cfg.TRAIN.IMG_SCALE)):
                 img_path = os.path.join(cfg.TRAIN.IMG_DIR, img_name)
                 label_path = os.path.join(cfg.TRAIN.LABEL_DIR, os.path.splitext(img_name)[0] + '.txt')
 
-                img_input = np.zeros([cfg.TRAIN.IMG_SIZE, cfg.TRAIN.IMG_SIZE], dtype=np.float32)
+                img_input = np.zeros([cfg.TRAIN.IMG_SIZE, cfg.TRAIN.IMG_SIZE, 3], dtype=np.float32)
 
                 img = cv2.imread(img_path)[:,:, ::-1]
                 img, (ratio_h, ratio_w) = resize_img(img, cfg.TRAIN.IMG_SIZE)
                 h, w, _ = img.shape
-                img_input[0:h, 0:w, :] = img
+                img_input[:h, :w, :] = img
                 h, w, _ = img_input.shape
 
                 polys, tags = load_labels(label_path)
                 polys[:, 0] *= ratio_w
                 polys[:, 1] *= ratio_h
-
+                polys = polys.tolist()
                 score_map, score_mask, threshold_map, thresh_mask = make_train_labels(polys, tags, h, w)
 
                 train_imgs.append(img_input)
@@ -142,8 +142,8 @@ def get_batch(num_workers, **kwargs):
 
 
 if __name__ =='__main__':
-    img_dir = '/Users/zhangzihao/AI/research/datasets/ctw1500/train/text_image'
-    label_dir = '/Users/zhangzihao/AI/research/datasets/ctw1500/train/text_label_curve'
+    img_dir = '/hostpersistent/zzh/dataset/open_data/ctw1500/train/text_image'
+    label_dir = '/hostpersistent/zzh/dataset/open_data/ctw1500/train/text_label_curve'
 
 
     img_list = os.listdir(img_dir)
