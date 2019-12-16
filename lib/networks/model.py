@@ -3,7 +3,7 @@ import tensorflow as tf
 from tensorflow.contrib import slim
 from db_config import cfg
 
-import lib.network.resnet_v1 as resnet_v1
+import lib.networks.resnet_v1 as resnet_v1
 
 
 def unpool(inputs, ratio=2):
@@ -93,12 +93,12 @@ def model(images, weight_decay=1e-5, is_training=True):
             with tf.variable_scope('binarize_branch'):
                 b_conv = slim.conv2d(final_f, 64, 3)
                 b_conv = slim.conv2d_transpose(b_conv, 64, 2, 2)
-                binarize_map = slim.conv2d_transpose(b_conv, 1, 2, 2, activation_fn=tf.nn.sigmoid, name='binarize_map')
+                binarize_map = slim.conv2d_transpose(b_conv, 1, 2, 2, activation_fn=tf.nn.sigmoid)
 
             with tf.variable_scope('threshold_branch'):
                 b_conv = slim.conv2d(final_f, 64, 3)
                 b_conv = slim.conv2d_transpose(b_conv, 256, 2, 2)
-                threshold_map = slim.conv2d_transpose(b_conv, 1, 2, 2, activation_fn=tf.nn.sigmoid, name='threshold_map')
+                threshold_map = slim.conv2d_transpose(b_conv, 1, 2, 2, activation_fn=tf.nn.sigmoid)
 
             with tf.variable_scope('thresh_binary_branch'):
                 thresh_binary = tf.reciprocal(1 + tf.exp(-cfg.K * (binarize_map-threshold_map)), name='thresh_binary')
