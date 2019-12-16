@@ -5,12 +5,12 @@ cfg = edict()
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~inference~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 cfg.MEANS = [123.68, 116.78, 103.94]
-cfg.INPUT_MAX_SIZE = 720
+cfg.INPUT_MAX_SIZE = 736
 cfg.K = 10
 cfg.SHRINK_RATIO = 0.4
-cfg.THRESH_MIN = 10
-cfg.THRESH_MAX = 10
-cfg.MIN_TEXT_SIZE = 10
+cfg.THRESH_MIN = 0.3
+cfg.THRESH_MAX = 0.7
+cfg.MIN_TEXT_SIZE = 1
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~train config~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -23,6 +23,11 @@ cfg.TRAIN.VIS_GPU = '1,2'
 cfg.TRAIN.BATCH_SIZE_PER_GPU = 12
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~dataload & aug~~~~~~~~~~~~~~~~~~~~~~~~~~
+cfg.TRAIN.IMG_DIR = ''
+cfg.TRAIN.LABEL_DIR = ''
+
+# 图像尺寸
+cfg.TRAIN.IMG_SIZE = 736
 # 图像缩放
 cfg.TRAIN.IMG_SCALE = [0.5, 1, 1, 1, 1.5, 2.0]
 # crop
@@ -51,13 +56,13 @@ cfg.TRAIN.SAVE_SUMMARY_STEPS = 100
 # 保存ckpt最大数
 cfg.TRAIN.SAVE_MAX = 100
 # log存放地址
-cfg.TRAIN.TRAIN_LOGS = os.path.join('/hostpersistent/zzh/ikkyyu/train_data/', save_data_name, 'tf_logs')
+cfg.TRAIN.TRAIN_LOGS = os.path.join('/hostpersistent/zzh/ikkyyu/train_data/', 'tf_logs')
 # ckpt存放地址
-cfg.TRAIN.CHECKPOINTS_OUTPUT_DIR = os.path.join('/hostpersistent/zzh/ikkyyu/train_data/', save_data_name, 'ckpt')
+cfg.TRAIN.CHECKPOINTS_OUTPUT_DIR = os.path.join('/hostpersistent/zzh/ikkyyu/train_data/', 'ckpt')
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~restore and pretrain~~~~~~~~~~~~~~~~~~~~~
 cfg.TRAIN.RESTORE = True
-cfg.TRAIN.RESTORE_CKPT_PATH = os.path.join('/hostpersistent/zzh/ikkyyu/train_data/', save_data_name, 'ckpt')
+cfg.TRAIN.RESTORE_CKPT_PATH = os.path.join('/hostpersistent/zzh/ikkyyu/train_data/', 'ckpt')
 cfg.TRAIN.PRETRAINED_MODEL_PATH = '/hostpersistent/zzh/ikkyyu/east_models/V0.9.29'
 
 
