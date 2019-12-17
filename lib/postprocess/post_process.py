@@ -11,7 +11,7 @@ class SegDetectorRepresenter():
         self.box_thresh = box_thresh
         self.max_candidates = max_candidates
 
-    def __call__(self, input_batch, score_maps, threshold_maps, thresh_binary, is_output_polygon=False):
+    def __call__(self, input_batch, score_maps, is_output_polygon=False):
         '''
         batch: (image, polygons, ignore_tags
         batch: a dict produced by dataloaders.
