@@ -6,11 +6,14 @@ This is a TensorFlow implementation of ["Real-time Scene Text Detection with Dif
 
 Part of the code is inherited from [DB](https://github.com/MhLiao/DB).
 
+![net](figures/net.png)
+
 
 ## Requirements:
 - Python3
 - Tensorflow >= 1.13 
 - easydict
+
 
 ## Dataset
 This repo is train on CTW1500 dataset.
@@ -28,14 +31,13 @@ Download from [BaiduYun]().
     python inference.py --gpuid='0' --ckptpath='path' --imgpath='img.jpg'
 
 
-## Samples
+## Samples show
 
 | org show 	| poly show 	| bbox show 	|
 |------------	|-------	|-------	|
 | ![poly_img](figures/org.jpg) 	| ![poly_img](figures/1039_polyshow.jpg) 	| ![bbox_img](figures/1039_bboxshow.jpg) 	|
 | binarize_map |  threshold_map	| thresh_binary |
 | ![bin_map](figures/1039_binarize_map.jpg) |  ![thres_map](figures/1039_threshold_map.jpg)	| ![bin_thres_map](figures/1039_thresh_binary.jpg) | 
-
 
 ## Training model
 #### 1. Get the CTW1500 train images path and labels path.

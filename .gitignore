@@ -10,10 +10,10 @@
 *ckpt*
 
 # image
-*.png
-*.jpg
-*.JPG
-*.jpeg
+#*.png
+#*.jpg
+#*.JPG
+#*.jpeg
 
 # txt result
 *.txt
