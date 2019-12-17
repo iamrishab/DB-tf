@@ -18,6 +18,26 @@ Download from [BaiduYun](https://pan.baidu.com/s/1yG_191LemrQa7K0h7Wispw) (key:y
 [OneDrive](https://1drv.ms/u/s!Aplwt7jiPGKilH4XzZPoKrO7Aulk).
 
 
+## Test
+
+### 1.Download model.
+Download from [BaiduYun]().
+
+### 2.Start to test img.
+
+    python inference.py --gpuid='0' --ckptpath='path' --imgpath='img.jpg'
+
+
+## Samples
+
+|   	|   	|   	|
+|------------	|-------	|-------	|
+| org show 	| poly show 	| bbox show 	|
+| ![poly_img](figures/org.jpg) 	| ![poly_img](figures/1039_polyshow.jpg) 	| ![bbox_img](figures/1039_bboxshow.jpg) 	|
+| binarize_map |  threshold_map	| thresh_binary |
+| ![bin_map](figures/1039_binarize_map.jpg) |  ![thres_map](figures/1039_threshold_map.jpg)	| ![bin_thres_map](figures/1039_thresh_binary.jpg) | 
+
+
 ## Training model
 #### 1. Get the CTW1500 train images path and labels path.
 
@@ -69,26 +89,6 @@ tensorboard show
 | ![model_loss](figures/3.png) | |
 
 
-## Test
-
-### 1.Download model.
-Download from [BaiduYun]().
-
-### 2.Start to test img.
-
-    python inference.py --gpuid='0' --ckptpath='path' --imgpath='img.jpg'
-
-
-## Samples
-
-|   	|   	|
-|------------	|-------	|
-| poly show 	| bbox show 	|
-| ![poly_img](figures/1039_polyshow.jpg) 	| ![bbox_img](figures/1039_bboxshow.jpg) 	|
-| binarize_map |  threshold_map	|
-| ![bin_map](figures/1039_binarize_map.jpg) |  ![thres_map](figures/1039_threshold_map.jpg)	|
-| thresh_binary |  	|
-| ![bin_thres_map](figures/1039_thresh_binary.jpg) |  	|
 
 ## ToDo List
 
