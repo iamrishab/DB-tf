@@ -61,9 +61,12 @@ revise the `db_config.py`
 
 tensorboard show
 
-![dice_loss](figures/1.png)
-![total_loss](figures/2.png)
-![model_loss](figures/3.png)
+|   	|   	|
+|------------	|-------	|
+| dice_loss 	| total_loss 	|
+| ![dice_loss](figures/1.png) 	| ![total_loss](figures/2.png)	|
+| model_loss |  threshold_map	|
+| ![model_loss](figures/3.png) | |
 
 
 ## Test
@@ -78,20 +81,14 @@ Download from [BaiduYun]().
 
 ## Samples
 
-poly show 
-![poly_img](figures/1039_polyshow.jpg) 
-
-bbox show
-![bbox_img](figures/1039_bboxshow.jpg)
-
-binarize_map
-![bin_map](figures/1039_binarize_map.jpg)
-
-threshold_map
-![thres_map](figures/1039_threshold_map.jpg)
-
-thresh_binary
-![bin_thres_map](figures/1039_thresh_binary.jpg)
+|   	|   	|
+|------------	|-------	|
+| poly show 	| bbox show 	|
+| ![poly_img](figures/1039_polyshow.jpg) 	| ![bbox_img](figures/1039_bboxshow.jpg) 	|
+| binarize_map |  threshold_map	|
+| ![bin_map](figures/1039_binarize_map.jpg) |  ![thres_map](figures/1039_threshold_map.jpg)	|
+| thresh_binary |  	|
+| ![bin_thres_map](figures/1039_thresh_binary.jpg) |  	|
 
 ## ToDo List
 
