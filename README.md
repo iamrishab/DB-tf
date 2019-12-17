@@ -30,9 +30,8 @@ Download from [BaiduYun]().
 
 ## Samples
 
-|   	|   	|   	|
-|------------	|-------	|-------	|
 | org show 	| poly show 	| bbox show 	|
+|------------	|-------	|-------	|
 | ![poly_img](figures/org.jpg) 	| ![poly_img](figures/1039_polyshow.jpg) 	| ![bbox_img](figures/1039_bboxshow.jpg) 	|
 | binarize_map |  threshold_map	| thresh_binary |
 | ![bin_map](figures/1039_binarize_map.jpg) |  ![thres_map](figures/1039_threshold_map.jpg)	| ![bin_thres_map](figures/1039_thresh_binary.jpg) | 
@@ -81,9 +80,8 @@ revise the `db_config.py`
 
 tensorboard show
 
-|   	|   	|   	|
+|   dice_loss	|   total_loss	|   model_loss	|
 |------------	|-------	|-------	|
-| dice_loss 	| total_loss 	|model_loss |
 | ![dice_loss](figures/1.png) 	| ![total_loss](figures/2.png)	|![model_loss](figures/3.png) |
 
 
