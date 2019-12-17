@@ -81,12 +81,11 @@ revise the `db_config.py`
 
 tensorboard show
 
-|   	|   	|
-|------------	|-------	|
-| dice_loss 	| total_loss 	|
-| ![dice_loss](figures/1.png) 	| ![total_loss](figures/2.png)	|
-| model_loss |  	|
-| ![model_loss](figures/3.png) | |
+|   	|   	|   	|
+|------------	|-------	|-------	|
+| dice_loss 	| total_loss 	|model_loss |
+| ![dice_loss](figures/1.png) 	| ![total_loss](figures/2.png)	|![model_loss](figures/3.png) |
+
 
 
 
