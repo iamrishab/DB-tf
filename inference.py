@@ -1,12 +1,30 @@
 import os
 import cv2
 import time
+import argparse
 import numpy as np
 import tensorflow as tf
 from db_config import cfg
 
+
 from lib.postprocess.post_process import SegDetectorRepresenter
 import lib.networks.model as model
+
+
+def get_args():
+    parser = argparse.ArgumentParser(description='DB-tf')
+    parser.add_argument('--ckptpath', default='/hostpersistent/zzh/lab/DB-tf/ckpt/1216_DB_model.ckpt-10101', type=str,
+                        help='load model')
+    parser.add_argument('--imgpath', default='/hostpersistent/zzh/dataset/open_data/ctw1500/test/text_image/1039.jpg',
+                        type=str)
+    parser.add_argument('--gpuid', default='0',
+                        type=str)
+    parser.add_argument('--ispoly', default=True,
+                        type=bool)
+
+    args = parser.parse_args()
+
+    return args
 
 class DB():
 
@@ -29,25 +47,25 @@ class DB():
     def __del__(self):
         self.sess.close()
 
-    def detect_img(self, img):
+    def detect_img(self, img_path, ispoly=True):
+        img = cv2.imread(img_path)
         h, w, _ = img.shape
         resized_img, (ratio_h, ratio_w) = self._resize_img(img)
 
         binarize_map, threshold_map, thresh_binary = self.sess.run([self._binarize_map, self._threshold_map, self._thresh_binary],
                                                                    feed_dict={self._input_images: [resized_img]})
 
-        cv2.imwrite('binarize_map.jpg', binarize_map[0]*255)
-        cv2.imwrite('threshold_map.jpg', threshold_map[0]*255)
-        cv2.imwrite('thresh_binary.jpg', thresh_binary[0]*255)
+        img_name = os.path.splitext(os.path.split(img_path)[-1])[0]
+        cv2.imwrite(img_name + '_binarize_map.jpg', binarize_map[0]*255)
+        cv2.imwrite(img_name + '_threshold_map.jpg', threshold_map[0]*255)
+        cv2.imwrite(img_name + '_thresh_binary.jpg', thresh_binary[0]*255)
 
-        boxes, scores = self.decoder([img], binarize_map, threshold_map, thresh_binary, True)
-        # print(info)
-        # print(boxes.shape)
+        boxes, scores = self.decoder([img], binarize_map, threshold_map, thresh_binary, ispoly)
+
         for box in boxes[0]:
-            print(box)
-            print(box.shape)
+
             cv2.polylines(img, [box.astype(np.int).reshape([-1, 1, 2])], True, (0, 255, 0))
-        cv2.imwrite('show.jpg', img)
+        cv2.imwrite(img_name + '_show.jpg', img)
 
 
     def detect_batch(self, batch):
@@ -75,12 +93,13 @@ class DB():
 
 
 if __name__ == "__main__":
-    os.environ['CUDA_VISIBLE_DEVICES'] = '0'
+    args = get_args()
 
-    db = DB('/hostpersistent/zzh/lab/DB-tf/ckpt/1216_DB_model.ckpt-10101')
+    os.environ['CUDA_VISIBLE_DEVICES'] = args.gpuid
 
-    img = cv2.imread('/hostpersistent/zzh/dataset/open_data/ctw1500/test/text_image/1039.jpg')
-    db.detect_img(img)
+    db = DB(args.ckptpath)
+
+    db.detect_img(args.imgpath, args.ispoly)
 
     # s = time.time()
     # for i in range(50):
