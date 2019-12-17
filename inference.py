@@ -60,7 +60,7 @@ class DB():
         cv2.imwrite(img_name + '_threshold_map.jpg', threshold_map[0]*255)
         cv2.imwrite(img_name + '_thresh_binary.jpg', thresh_binary[0]*255)
 
-        boxes, scores = self.decoder([img], binarize_map, threshold_map, thresh_binary, ispoly)
+        boxes, scores = self.decoder([img], binarize_map, ispoly)
 
         for box in boxes[0]:
 
