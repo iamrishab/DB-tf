@@ -2,7 +2,7 @@
 
 
 ## Introduction
-This is a TensorFlow implementation of "Real-time Scene Text Detection with Differentiable Binarization". [This paper](https://arxiv.org/abs/1911.08947) presents a real-time arbitrary-shape scene text detector, achieving the state-of-the-art performance on standard benchmarks.
+This is a TensorFlow implementation of ["Real-time Scene Text Detection with Differentiable Binarization"](https://arxiv.org/abs/1911.08947).
 
 Part of the code is inherited from [DB](https://github.com/MhLiao/DB).
 
@@ -73,6 +73,23 @@ Download from [BaiduYun]().
 
 ### 2.
 
+
+## Samples
+
+poly show 
+![poly_img](figures/1039_polyshow.jpg) 
+
+bbox show
+![bbox_img](figures/1039_bboxshow.jpg)
+
+binarize_map
+![bin_map](figures/1039_binarize_map.jpg)
+
+threshold_map
+![thres_map](figures/1039_threshold_map.jpg)
+
+thresh_binary
+![bin_thres_map](figures/1039_thresh_binary.jpg)
 
 ## ToDo List
 

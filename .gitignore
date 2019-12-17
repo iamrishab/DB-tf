@@ -11,8 +11,8 @@
 
 # image
 #*.png
-*.jpg
-*.JPG
+#*.jpg
+#*.JPG
 *.jpeg
 
 # txt result
