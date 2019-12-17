@@ -71,7 +71,12 @@ tensorboard show
 ### 1.Download model.
 Download from [BaiduYun]().
 
-### 2.
+### 2.Start to test img.
+
+    python inference.py --gpuid='0' --ckptpath='path' --imgpath='img.jpg'
+
+## Performance
+
 
 
 ## Samples
@@ -98,6 +103,7 @@ thresh_binary
 - [x] Inference code
 - [x] Muti gpu training
 - [x] Easy to read the code
+- [x] Tensorboard support
 - [ ] Eval code
 - [ ] Data augmentation
 - [ ] More backbones
