@@ -75,9 +75,6 @@ Download from [BaiduYun]().
 
     python inference.py --gpuid='0' --ckptpath='path' --imgpath='img.jpg'
 
-## Performance
-
-
 
 ## Samples
 
