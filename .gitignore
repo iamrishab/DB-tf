@@ -10,7 +10,7 @@
 *ckpt*
 
 # image
-*.png
+#*.png
 *.jpg
 *.JPG
 *.jpeg
