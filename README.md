@@ -95,7 +95,6 @@ tensorboard show
 - [x] Training code
 - [x] Inference code
 - [x] Muti gpu training
-- [x] Easy to read the code
 - [x] Tensorboard support
 - [ ] Eval code
 - [ ] Data augmentation
