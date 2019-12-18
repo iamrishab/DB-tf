@@ -4,6 +4,7 @@ from tensorflow.contrib import slim
 from db_config import cfg
 
 import lib.networks.resnet.resnet_v1 as resnet_v1
+import lib.networks.resnet.resnet_v1_tiny as resnet_v1_tiny
 
 
 def unpool(inputs, ratio=2):
@@ -24,10 +25,20 @@ def mean_image_subtraction(images, means=[123.68, 116.78, 103.94]):
         channels[i] -= means[i]
     return tf.concat(axis=3, values=channels)
 
-def backbone(input, weight_decay, is_training):
-    with slim.arg_scope(resnet_v1.resnet_arg_scope(weight_decay=weight_decay)):
-        logits, end_points = resnet_v1.resnet_v1_50(input, is_training=is_training, scope='resnet_v1_50')
-    return logits, end_points
+def backbone(input, weight_decay, is_training, backbone_name=cfg.BACKBONE):
+    # ['resnet_v1_50', 'resnet_v1_18', 'resnet_v2_50', 'resnet_v2_18', 'mobilenet_v2', 'mobilenet_v3']
+
+    if backbone_name == 'resnet_v1_50':
+        with slim.arg_scope(resnet_v1.resnet_arg_scope(weight_decay=weight_decay)):
+            logits, end_points = resnet_v1.resnet_v1_50(input, is_training=is_training, scope=backbone_name)
+        return logits, end_points
+    elif backbone_name == 'resnet_v1_18':
+        with slim.arg_scope(resnet_v1_tiny.resnet_arg_scope(weight_decay=weight_decay)):
+            logits, end_points = resnet_v1_tiny.resnet_v1_18(input, is_training=is_training, scope=backbone_name)
+        return logits, end_points
+    else:
+        print('{} is error backbone name, not support!'.format(backbone_name))
+        assert 0
 
 
 def model(images, weight_decay=1e-5, is_training=True):
