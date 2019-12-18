@@ -87,6 +87,15 @@ tensorboard show
 | ![dice_loss](figures/1.png) 	| ![total_loss](figures/2.png)	|![model_loss](figures/3.png) |
 
 
+## Experiment
+
+|   BackBone	|   Input Size	|   Infernce Time(ms)	|	PostProcess Time(ms) |
+|------------	|-------	|-------	|-------	|
+| ResNet-50 	| 320	| 13.3 | 2.9 |
+| ResNet-50 	| 512	| 19.2 | 4.5 |
+| ResNet-50 	| 736	| 33.2 | 5.7 |
+
+
 
 
 ## ToDo List
