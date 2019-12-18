@@ -108,10 +108,18 @@ def bottleneck_tiny(inputs,
           activation_fn=tf.nn.relu6 if use_bounded_activations else None,
           scope='shortcut')
     # zzh: for resnet 18, 24. It is diff from 50, 101, 251 etc
-    residual = resnet_utils.conv2d_same(inputs, depth_bottleneck, 3, stride,
+    residual = resnet_utils.conv2d_same(inputs, depth_bottleneck, 3, 1,
                                         rate=rate, scope='conv1')
-    residual = resnet_utils.conv2d_same(residual, depth_bottleneck, 3, stride,
+    residual = resnet_utils.conv2d_same(residual, depth, 3, stride,
                                         rate=rate, scope='conv2')
+
+    # residual = slim.conv2d(inputs, depth_bottleneck, [1, 1], stride=1,
+    #                        scope='conv1')
+    # residual = resnet_utils.conv2d_same(residual, depth_bottleneck, 3, stride,
+    #                                     rate=rate, scope='conv2')
+    # residual = slim.conv2d(residual, depth, [1, 1], stride=1,
+    #                        activation_fn=None, scope='conv3')
+
 
     if use_bounded_activations:
       # Use clip_by_value to simulate bandpass activation.
