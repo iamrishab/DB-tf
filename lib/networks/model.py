@@ -3,7 +3,7 @@ import tensorflow as tf
 from tensorflow.contrib import slim
 from db_config import cfg
 
-import lib.networks.resnet_v1 as resnet_v1
+import lib.networks.resnet.resnet_v1 as resnet_v1
 
 
 def unpool(inputs, ratio=2):
