@@ -81,14 +81,14 @@ def model(images, weight_decay=1e-5, is_training=True):
 
                 for i, f in enumerate(features):
                     if i is 0:
-                        conv_f = slim.conv2d(f, 256, 3)
+                        conv_f = slim.conv2d(f, 64, 3)
                         concat_feature = conv_f
                     else:
-                        up_f = slim.conv2d(f, 256, 3)
+                        up_f = slim.conv2d(f, 64, 3)
                         up_f = unpool(up_f, 2**i)
                         concat_feature = tf.concat([concat_feature, up_f], axis=-1)
 
-                final_f = slim.conv2d(concat_feature, 256, 3)
+                final_f = slim.conv2d(concat_feature, 64, 3)
 
             with tf.variable_scope('binarize_branch'):
                 b_conv = slim.conv2d(final_f, 64, 3)

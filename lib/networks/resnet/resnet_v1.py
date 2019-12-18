@@ -215,24 +215,21 @@ def resnet_v1(inputs,
             output_stride /= 4
           net = resnet_utils.conv2d_same(net, 64, 7, stride=2, scope='conv1')
           net = slim.max_pool2d(net, [3, 3], stride=2, scope='pool1')
+          net = slim.utils.collect_named_outputs(end_points_collection, 'pool2', net)
         net = resnet_utils.stack_blocks_dense(net, blocks, output_stride,
                                               store_non_strided_activations)
         # Convert end_points_collection into a dictionary of end_points.
         end_points = slim.utils.convert_collection_to_dict(
             end_points_collection)
 
-        if global_pool:
-          # Global average pooling.
-          net = tf.reduce_mean(net, [1, 2], name='pool5', keep_dims=True)
-          end_points['global_pool'] = net
-        if num_classes:
-          net = slim.conv2d(net, num_classes, [1, 1], activation_fn=None,
-                            normalizer_fn=None, scope='logits')
-          end_points[sc.name + '/logits'] = net
-          if spatial_squeeze:
-            net = tf.squeeze(net, [1, 2], name='SpatialSqueeze')
-            end_points[sc.name + '/spatial_squeeze'] = net
-          end_points['predictions'] = slim.softmax(net, scope='predictions')
+        try:
+            end_points['pool3'] = end_points[scope + '/block1']
+            end_points['pool4'] = end_points[scope + '/block2']
+        except:
+            end_points['pool3'] = end_points['Detection/' + scope + '/block1']
+            end_points['pool4'] = end_points['Detection/' + scope + '/block1']
+        end_points['pool5'] = net
+
         return net, end_points
 resnet_v1.default_image_size = 224
 
