@@ -94,7 +94,9 @@ tensorboard show
 | ResNet-50 	| 320	| 13.3 | 2.9 |
 | ResNet-50 	| 512	| 19.2 | 4.5 |
 | ResNet-50 	| 736	| 33.2 | 5.7 |
-
+| ResNet-18 	| 320	|  |  |
+| ResNet-18 	| 512	|  |  |
+| ResNet-18 	| 736	|  |  |
 
 
 
@@ -105,7 +107,9 @@ tensorboard show
 - [x] Inference code
 - [x] Muti gpu training
 - [x] Tensorboard support
+- [x] Threshold loss : L1 loss -> Smooth L1 loss
 - [ ] Eval code
 - [ ] Data augmentation
-- [ ] More backbones
+- [x] More backbones
+- [ ] Add ASPP
 - [ ] Deformable Convolutional Networks
