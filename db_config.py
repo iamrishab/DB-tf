@@ -11,15 +11,14 @@ cfg.SHRINK_RATIO = 0.4
 cfg.THRESH_MIN = 0.3
 cfg.THRESH_MAX = 0.7
 cfg.MIN_TEXT_SIZE = 1
-cfg.BACKBONES_LIST = ['resnet_v1_50', 'resnet_v1_18', 'resnet_v2_50', 'resnet_v2_18',
-                 'mobilenet_v2', 'mobilenet_v3']
-cfg.BACKBONE = cfg.BACKBONES_LIST[0]
+# ['resnet_v1_50', 'resnet_v1_18', 'resnet_v2_50', 'resnet_v2_18', 'mobilenet_v2', 'mobilenet_v3']
+cfg.BACKBONE = 'resnet_v1_18'
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~train config~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 cfg.TRAIN = edict()
 cfg.TRAIN.VERSION = '1218'
 # 多gpu训练
-cfg.TRAIN.VIS_GPU = '3,4'
+cfg.TRAIN.VIS_GPU = '0,7'
 cfg.TRAIN.BATCH_SIZE_PER_GPU = 2
 cfg.TRAIN.LOSS_ALPHA = 1.0
 cfg.TRAIN.LOSS_BETA = 10.0
@@ -46,14 +45,14 @@ cfg.TRAIN.AUG_TOOL = ['GaussianBlur',
 cfg.TRAIN.MAX_STEPS = 10000000
 cfg.TRAIN.SAVE_CHECKPOINT_STEPS = 2000
 cfg.TRAIN.SAVE_SUMMARY_STEPS = 100
-cfg.TRAIN.SAVE_MAX = 100
-cfg.TRAIN.TRAIN_LOGS = os.path.join('/hostpersistent/zzh/lab/DB-tf', 'tf_logs')
-cfg.TRAIN.CHECKPOINTS_OUTPUT_DIR = os.path.join('/hostpersistent/zzh/lab/DB-tf', 'ckpt')
+cfg.TRAIN.SAVE_MAX = 20
+cfg.TRAIN.TRAIN_LOGS = os.path.join('/hostpersistent/zzh/lab/DB-tf/resnet18', 'tf_logs')
+cfg.TRAIN.CHECKPOINTS_OUTPUT_DIR = os.path.join('/hostpersistent/zzh/lab/DB-tf/resnet18', 'ckpt')
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~restore and pretrain~~~~~~~~~~~~~~~~~~~~~
 cfg.TRAIN.RESTORE = False
 cfg.TRAIN.RESTORE_CKPT_PATH = os.path.join('/hostpersistent/zzh/lab/DB-tf', 'ckpt')
-cfg.TRAIN.PRETRAINED_MODEL_PATH = '/hostpersistent/zzh/pretrain_models/resnet_v1_50.ckpt'
+cfg.TRAIN.PRETRAINED_MODEL_PATH = None#'/hostpersistent/zzh/lab/DB-tf/ckpt_1217/1216_DB_model.ckpt-165641'
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~super em~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 cfg.TRAIN.LEARNING_RATE = 0.0001
