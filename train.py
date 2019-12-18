@@ -217,7 +217,9 @@ def main():
                         cfg.TRAIN.VERSION, step, ml, tl, avg_time_per_step, avg_examples_per_second))
 
             if step % cfg["TRAIN"]["SAVE_CHECKPOINT_STEPS"] == 0:
-                saver.save(sess, os.path.join(cfg["TRAIN"]["CHECKPOINTS_OUTPUT_DIR"], cfg.TRAIN.VERSION + '_DB_model.ckpt'), global_step=global_step)
+                saver.save(sess, os.path.join(cfg["TRAIN"]["CHECKPOINTS_OUTPUT_DIR"],
+                                              'DB_' + cfg.BACKBONE + '_' + cfg.TRAIN.VERSION + '_model.ckpt'),
+                           global_step=global_step)
 
             if step % cfg["TRAIN"]["SAVE_SUMMARY_STEPS"] == 0:
                 _, tl, summary_str = sess.run([train_op, total_loss, summary_op], feed_dict=feed_dict)

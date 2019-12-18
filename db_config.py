@@ -11,13 +11,15 @@ cfg.SHRINK_RATIO = 0.4
 cfg.THRESH_MIN = 0.3
 cfg.THRESH_MAX = 0.7
 cfg.MIN_TEXT_SIZE = 1
-
+cfg.BACKBONES_LIST = ['resnet_v1_50', 'resnet_v1_18', 'resnet_v2_50', 'resnet_v2_18',
+                 'mobilenet_v2', 'mobilenet_v3']
+cfg.BACKBONE = cfg.BACKBONES_LIST[0]
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~train config~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 cfg.TRAIN = edict()
-cfg.TRAIN.VERSION = '1216'
+cfg.TRAIN.VERSION = '1218'
 # 多gpu训练
-cfg.TRAIN.VIS_GPU = '5,6'
+cfg.TRAIN.VIS_GPU = '3,4'
 cfg.TRAIN.BATCH_SIZE_PER_GPU = 2
 cfg.TRAIN.LOSS_ALPHA = 1.0
 cfg.TRAIN.LOSS_BETA = 10.0
