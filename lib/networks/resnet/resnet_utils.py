@@ -33,10 +33,6 @@ each block, instead of subsampling the input activations in the first residual
 unit of each block. The two implementations give identical results but our
 implementation is more memory efficient.
 """
-
-
-
-
 import collections
 import tensorflow as tf
 
