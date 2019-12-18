@@ -13,7 +13,7 @@ import lib.networks.model as model
 
 def get_args():
     parser = argparse.ArgumentParser(description='DB-tf')
-    parser.add_argument('--ckptpath', default='/hostpersistent/zzh/lab/DB-tf/ckpt/1216_DB_model.ckpt-10101', type=str,
+    parser.add_argument('--ckptpath', default='/hostpersistent/zzh/lab/DB-tf/ckpt_1217/1216_DB_model.ckpt-10101', type=str,
                         help='load model')
     parser.add_argument('--imgpath', default='/hostpersistent/zzh/dataset/open_data/ctw1500/test/text_image/1039.jpg',
                         type=str)
@@ -37,7 +37,7 @@ class DB():
 
         variable_averages = tf.train.ExponentialMovingAverage(0.997, global_step)
         saver = tf.train.Saver(variable_averages.variables_to_restore())
-        gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.3)
+        gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=1)
         gpu_config = tf.ConfigProto(log_device_placement=False, gpu_options=gpu_options, allow_soft_placement=True)
         self.sess = tf.Session(config=gpu_config)
         saver.restore(self.sess, ckpt_path)
@@ -47,31 +47,39 @@ class DB():
     def __del__(self):
         self.sess.close()
 
-    def detect_img(self, img_path, ispoly=True):
+    def detect_img(self, img_path, ispoly=True, show_res=True):
         img = cv2.imread(img_path)
         h, w, _ = img.shape
         resized_img, (ratio_h, ratio_w) = self._resize_img(img)
 
+        s = time.time()
         binarize_map, threshold_map, thresh_binary = self.sess.run([self._binarize_map, self._threshold_map, self._thresh_binary],
                                                                    feed_dict={self._input_images: [resized_img]})
 
-        img_name = os.path.splitext(os.path.split(img_path)[-1])[0]
-        cv2.imwrite(img_name + '_binarize_map.jpg', binarize_map[0]*255)
-        cv2.imwrite(img_name + '_threshold_map.jpg', threshold_map[0]*255)
-        cv2.imwrite(img_name + '_thresh_binary.jpg', thresh_binary[0]*255)
+        net_time = time.time()-s
 
+        s = time.time()
         boxes, scores = self.decoder([img], binarize_map, ispoly)
 
-        for box in boxes[0]:
+        post_time = time.time()-s
 
-            cv2.polylines(img, [box.astype(np.int).reshape([-1, 1, 2])], True, (0, 255, 0))
-        cv2.imwrite(img_name + '_show.jpg', img)
+        if show_res:
+            img_name = os.path.splitext(os.path.split(img_path)[-1])[0]
+            cv2.imwrite(img_name + '_binarize_map.jpg', binarize_map[0]*255)
+            cv2.imwrite(img_name + '_threshold_map.jpg', threshold_map[0]*255)
+            cv2.imwrite(img_name + '_thresh_binary.jpg', thresh_binary[0]*255)
+            for box in boxes[0]:
+
+                cv2.polylines(img, [box.astype(np.int).reshape([-1, 1, 2])], True, (0, 255, 0))
+            cv2.imwrite(img_name + '_show.jpg', img)
+
+        return net_time, post_time
 
 
     def detect_batch(self, batch):
         pass
 
-    def _resize_img(self, img, max_size=736):
+    def _resize_img(self, img, max_size=320):
         h, w, _ = img.shape
 
         if max(h, w) > max_size:
@@ -89,7 +97,10 @@ class DB():
         ratio_h = resize_h / float(h)
         ratio_w = resize_w / float(w)
 
-        return resized_img, (ratio_h, ratio_w)
+        input_img = np.zeros([max_size, max_size, 3])
+        input_img[0:resize_h, 0:resize_w, :] = resized_img
+
+        return input_img, (ratio_h, ratio_w)
 
 
 if __name__ == "__main__":
@@ -101,7 +112,18 @@ if __name__ == "__main__":
 
     db.detect_img(args.imgpath, args.ispoly)
 
-    # s = time.time()
-    # for i in range(50):
-    #     db.detect_img(img)
-    # print((time.time()-s)/50)
+    # img_list = os.listdir('/hostpersistent/zzh/dataset/open_data/ctw1500/test/text_image/')
+
+    # net_all = 0
+    # post_all = 0
+    # pipe_all = 0
+    #
+    # for i in img_list[0:50]:
+    #     net_time, post_time = db.detect_img(os.path.join('/hostpersistent/zzh/dataset/open_data/ctw1500/test/text_image/',i), args.ispoly, show_res=False)
+    #     net_all += net_time
+    #     post_all += post_time
+    #     pipe_all += (net_time + post_time)
+    #
+    # print('net:', net_all/50)
+    # print('post:', post_all/50)
+    # print('pipe:', pipe_all/50)
