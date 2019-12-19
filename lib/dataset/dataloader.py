@@ -2,19 +2,20 @@ import os
 import cv2
 import math
 import time
+import random
 import numpy as np
 
 from db_config import cfg
 from lib.dataset.label_maker import make_border_map, make_score_map
 from lib.dataset.generator_enqueuer import GeneratorEnqueuer
-
+from lib.dataset.img_aug import crop_area
 
 
 def load_labels(gt_path):
     """
     load pts
     :param gt_path:
-    :return:
+    :return: polys shape [N, 14, 2]
     """
     assert os.path.exists(gt_path), '{} is not exits'.format(gt_path)
     polys = []
@@ -90,14 +91,21 @@ def generator(batchsize, random_scale=np.array(cfg.TRAIN.IMG_SCALE)):
 
                 img = cv2.imread(img_path)[:,:, ::-1]
                 img, (ratio_h, ratio_w) = resize_img(img, cfg.TRAIN.IMG_SIZE)
-                h, w, _ = img.shape
-                img_input[:h, :w, :] = img
-                h, w, _ = img_input.shape
 
                 polys, tags = load_labels(label_path)
                 polys[:, :, 0] *= ratio_w
                 polys[:, :, 1] *= ratio_h
-                # polys = polys.astype(np.int).tolist()
+
+                if random.random() < cfg.TRAIN.CROP_PROB:
+                    img, polys, tags = crop_area(img, polys, tags)
+                    img, (ratio_h, ratio_w) = resize_img(img, cfg.TRAIN.IMG_SIZE)
+                    polys[:, :, 0] *= ratio_w
+                    polys[:, :, 1] *= ratio_h
+
+                h, w, _ = img.shape
+                img_input[:h, :w, :] = img
+                h, w, _ = img_input.shape
+
                 score_map, score_mask, threshold_map, thresh_mask = make_train_labels(polys, tags, h, w)
 
                 train_imgs.append(img_input)
@@ -148,8 +156,8 @@ def get_batch(num_workers, **kwargs):
 
 
 if __name__ =='__main__':
-    img_dir = '/hostpersistent/zzh/dataset/open_data/ctw1500/train/text_image'
-    label_dir = '/hostpersistent/zzh/dataset/open_data/ctw1500/train/text_label_curve'
+    img_dir = '/Users/zhangzihao/AI/research/datasets/ctw1500/train/text_image'
+    label_dir = '/Users/zhangzihao/AI/research/datasets/ctw1500/train/text_label_curve'
 
 
     img_list = os.listdir(img_dir)
@@ -166,8 +174,12 @@ if __name__ =='__main__':
         poly = np.array(poly, dtype=np.int)
         cv2.polylines(img, [poly.reshape((-1, 1, 2))], True, (0, 255, 0))
 
+
     threshold_map, thresh_mask = make_border_map(polys, tags, h, w)
+
+    s = time.time()
     score_map, score_mask = make_score_map(polys, tags, h, w)
+    print(time.time()-s)
 
     cv2.imwrite('s.jpg', score_map*255)
     cv2.imwrite('t.jpg', threshold_map*255)
