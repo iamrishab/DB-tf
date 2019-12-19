@@ -86,7 +86,7 @@ tensorboard show
 |------------	|-------	|
 | ![dice_loss](figures/1.png) 	| ![total_loss](figures/3.png)	|
 |   model_loss 	|   total_loss	|
-| ![dice_loss](figures/2.png) 	| ![dice_loss](figures/1.png) 	|
+| ![dice_loss](figures/2.png) 	| ![dice_loss](figures/4.png) 	|
 
 ## Experiment
 
