@@ -26,7 +26,14 @@ Download from [BaiduYun](https://pan.baidu.com/s/1yG_191LemrQa7K0h7Wispw) (key:y
 ### 1.Download model.
 Download from [ResNet-50](https://pan.baidu.com/s/1p6VEDQdxR3wn66L58QnK6w).
 
-### 2.Start to test img.
+
+### 2.Config network
+revise the `db_config.py`
+
+    cfg.BACKBONE = 'resnet_v1_50'
+
+
+### 3.Start to test img.
 
     python inference.py --gpuid='0' --ckptpath='path' --imgpath='img.jpg'
 
@@ -47,10 +54,12 @@ revise the `db_config.py`
     cfg.TRAIN.IMG_DIR = '/path/ctw1500/train/text_image'
     cfg.TRAIN.LABEL_DIR = '/path/ctw1500/train/text_label_curve'
 
-#### 2. Muti gpu train.
+#### 2. Muti gpu train and config network.
 
 revise the `db_config.py`
-
+    
+    # only support 'resnet_v1_50' and 'resnet_v1_18'
+    cfg.BACKBONE = 'resnet_v1_50' 
     cfg.TRAIN.VIS_GPU = '5,6' # single gpu -> '0'
     
 #### 3. Save train logs and models.
