@@ -65,14 +65,17 @@ class SegDetectorRepresenter():
             score = self._box_score_fast(pred, contour)
             if self.box_thresh > score:
                 continue
-
+            # print('points', points)
             if points.shape[0] > 2:
                 box = self._unclip(points, unclip_ratio=2.0)
-                if len(box) > 1:
+                # print('bbox', box)
+                if len(box) != 1:
                     continue
             else:
                 continue
+            # print('box', box.shape)
             box = box.reshape(-1, 2)
+            # print('re', box.shape)
             _, sside = self._get_mini_boxes(box.reshape((-1, 1, 2)))
             if sside < self.min_size + 2:
                 continue
@@ -135,6 +138,7 @@ class SegDetectorRepresenter():
         return expanded
 
     def _get_mini_boxes(self, contour):
+        # print(contour.shape)
         bounding_box = cv2.minAreaRect(contour)
         points = sorted(list(cv2.boxPoints(bounding_box)), key=lambda x: x[0])
 
