@@ -30,8 +30,9 @@ cfg.TRAIN.LABEL_DIR = '/hostpersistent/zzh/dataset/open_data/ctw1500/train/text_
 cfg.TRAIN.IMG_SIZE = 640
 cfg.TRAIN.IMG_SCALE = [0.5, 1, 1, 1, 1.5, 2.0]
 cfg.TRAIN.CROP_PROB = 0.9
+cfg.TRAIN.MIN_CROP_SIDE_RATIO = 0.001
 cfg.TRAIN.NUM_READERS = 20
-cfg.TRAIN.DATA_AUG_PROB = 0.0
+cfg.TRAIN.DATA_AUG_PROB = 0.5
 cfg.TRAIN.AUG_TOOL = ['GaussianBlur',
                 'AverageBlur',
                 'MedianBlur',
@@ -58,5 +59,5 @@ cfg.TRAIN.PRETRAINED_MODEL_PATH = '/hostpersistent/zzh/lab/DB-tf/ckpt/DB_resnet_
 cfg.TRAIN.LEARNING_RATE = 0.0001
 cfg.TRAIN.OPT = 'momentum'#'adam'#
 cfg.TRAIN.MOVING_AVERAGE_DECAY = 0.997
-cfg.TRAIN.MIN_CROP_SIDE_RATIO = 0.001
+
 

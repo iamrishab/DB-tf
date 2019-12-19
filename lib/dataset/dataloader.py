@@ -8,7 +8,7 @@ import numpy as np
 from db_config import cfg
 from lib.dataset.label_maker import make_border_map, make_score_map
 from lib.dataset.generator_enqueuer import GeneratorEnqueuer
-from lib.dataset.img_aug import crop_area
+from lib.dataset.img_aug import crop_area, det_aug
 
 
 def load_labels(gt_path):
@@ -91,6 +91,9 @@ def generator(batchsize, random_scale=np.array(cfg.TRAIN.IMG_SCALE)):
 
                 img = cv2.imread(img_path)[:,:, ::-1]
                 img, (ratio_h, ratio_w) = resize_img(img, cfg.TRAIN.IMG_SIZE)
+
+                if random.random() < cfg.TRAIN.DATA_AUG_PROB:
+                    img = det_aug(img)
 
                 polys, tags = load_labels(label_path)
                 polys[:, :, 0] *= ratio_w

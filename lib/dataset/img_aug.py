@@ -78,7 +78,7 @@ def crop_area(im, polys, tags, crop_background=False, max_tries=50):
 
 
 
-def det_aug(image, polys_np):
+def det_aug(image, polys_np=None):
     """
     随机对图像做以下的增强操作
     :param image: cv2 read
@@ -193,20 +193,25 @@ def det_aug(image, polys_np):
     #     height = image.shape[0] - 32
     #     width = image.shape[1] - 100
     #     aug = iaa.CropToFixedSize(width=width, height=height)
-    if aug is not None:
-        # print(aug_sample)
-        h, w, _ = image.shape
-        boxes_info_list = []
-        for box in polys_np:
-            boxes_info_list.append(Polygon(box))
 
-        psoi = ia.PolygonsOnImage(boxes_info_list, shape=image.shape)  # 生成单个图像上所有多边形的对象
-        image, psoi_aug = aug(image=image, polygons=psoi)
+    if polys_np is not None:
+        if aug is not None:
+            # print(aug_sample)
+            h, w, _ = image.shape
+            boxes_info_list = []
+            for box in polys_np:
+                boxes_info_list.append(Polygon(box))
 
-        pts_list = []
-        for each_poly in psoi_aug.polygons:
-            pts_list.append(np.array(each_poly.exterior).reshape((4, 2)))
-        return image, np.array(pts_list, np.float32).reshape((-1, 4, 2))
+            psoi = ia.PolygonsOnImage(boxes_info_list, shape=image.shape)  # 生成单个图像上所有多边形的对象
+            image, psoi_aug = aug(image=image, polygons=psoi)
+
+            pts_list = []
+            for each_poly in psoi_aug.polygons:
+                pts_list.append(np.array(each_poly.exterior).reshape((4, 2)))
+            return image, np.array(pts_list, np.float32).reshape((-1, 4, 2))
+        else:
+
+            return image, polys_np
     else:
-
-        return image, polys_np
+        image = aug(image=image)
+        return image
