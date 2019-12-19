@@ -24,7 +24,7 @@ Download from [BaiduYun](https://pan.baidu.com/s/1yG_191LemrQa7K0h7Wispw) (key:y
 ## Test
 
 ### 1.Download model.
-Download from [BaiduYun]().
+Download from [ResNet-50](https://pan.baidu.com/s/1p6VEDQdxR3wn66L58QnK6w).
 
 ### 2.Start to test img.
 
