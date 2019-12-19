@@ -58,12 +58,18 @@ def softmax_cross_entropy_loss(y_true_cls, y_pred_cls, training_mask):
 
     return cls_loss
 
+def l1_loss(pred, gt, mask):
+
+    loss = tf.reduce_mean(tf.abs(pred - gt) * mask) + 1e-6
+
+    return loss
+
 
 def smooth_l1_loss(pred, gt, mask, sigma=1.0):
     '''
 
-    :param bbox_pred:
-    :param bbox_targets: shape is same as bbox_pred
+    :param pred:
+    :param gt: shape is same as pred
     :param sigma:
     :return:
     '''
@@ -74,14 +80,14 @@ def smooth_l1_loss(pred, gt, mask, sigma=1.0):
     with tf.name_scope('smooth_l1_loss'):
         deltas_abs = tf.abs(diff)
         smoothL1_sign = tf.cast(tf.less(deltas_abs, 1.0 / sigma2), tf.float32)
-        return tf.square(diff) * 0.5 * sigma2 * smoothL1_sign + \
-               (deltas_abs - 0.5 / sigma2) * tf.abs(smoothL1_sign - 1)
+        return tf.reduce_mean(tf.square(diff) * 0.5 * sigma2 * smoothL1_sign + \
+               (deltas_abs - 0.5 / sigma2) * tf.abs(smoothL1_sign - 1))
 
 def compute_loss(binarize_map, threshold_map, thresh_binary,
                  gt_score_maps, gt_threshold_map, gt_score_mask, gt_thresh_mask):
 
     binarize_loss = dice_coefficient_loss(gt_score_maps, binarize_map, gt_score_mask)
-    threshold_loss = tf.reduce_mean(smooth_l1_loss(threshold_map, gt_threshold_map, gt_thresh_mask))
+    threshold_loss = l1_loss(threshold_map, gt_threshold_map, gt_thresh_mask)
     thresh_binary_loss = dice_coefficient_loss(gt_score_maps, thresh_binary, gt_score_mask)
 
     model_loss = cfg.TRAIN.LOSS_ALPHA * binarize_loss + cfg.TRAIN.LOSS_BETA * threshold_loss + thresh_binary_loss

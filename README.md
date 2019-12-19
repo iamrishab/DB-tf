@@ -119,7 +119,7 @@ Test on RTX 2080 Ti.
 - [x] Inference code
 - [x] Muti gpu training
 - [x] Tensorboard support
-- [x] Threshold loss : L1 loss -> Smooth L1 loss
+- [x] Exp another train losses 
 - [ ] Eval code
 - [x] Data augmentation(crop and random img aug)
 - [x] More backbones
