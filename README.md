@@ -89,6 +89,8 @@ tensorboard show
 
 ## Experiment
 
+Test on RTX 2080 Ti.
+
 |   BackBone	|   Input Size	|   Infernce Time(ms)	|	PostProcess Time(ms) |
 |------------	|-------	|-------	|-------	|
 | ResNet-50 	| 320	| 13.3 | 2.9 |
