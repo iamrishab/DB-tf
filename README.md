@@ -84,9 +84,9 @@ tensorboard show
 
 |   binarize_loss	|   thresh_binary_loss	|
 |------------	|-------	|
-| ![dice_loss](figures/1.png) 	| ![total_loss](figures/3.png)	|
+| ![binarize_loss](figures/1.png) 	| ![thresh_binary_loss](figures/3.png)	|
 |   model_loss 	|   total_loss	|
-| ![dice_loss](figures/2.png) 	| ![dice_loss](figures/4.png) 	|
+| ![model_loss](figures/2.png) 	| ![total_loss](figures/4.png) 	|
 
 ## Experiment
 
