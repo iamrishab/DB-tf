@@ -121,7 +121,7 @@ Test on RTX 2080 Ti.
 - [x] Tensorboard support
 - [x] Threshold loss : L1 loss -> Smooth L1 loss
 - [ ] Eval code
-- [ ] Data augmentation
+- [x] Data augmentation(crop and random img aug)
 - [x] More backbones
 - [ ] Add ASPP
 - [ ] Deformable Convolutional Networks
