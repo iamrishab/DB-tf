@@ -45,11 +45,14 @@ def _validate_polygons(polys, tags, h, w):
         poly[:, 1] = np.clip(poly[:, 1], 0, h - 1)
 
     for i in range(len(polys)):
-        area = _polygon_area(polys[i])
-        if abs(area) < 1:
+        area = Polygon(polys[i]).convex_hull.area
+        # area = _polygon_area(polys[i])
+        # if abs(area) < 1:
+        #     tags[i] = True
+        # if area > 0:
+        #     polys[i] = polys[i][::-1, :]
+        if area <= cfg.TRAIN.MIN_AREA:
             tags[i] = True
-        if area > 0:
-            polys[i] = polys[i][::-1, :]
     return polys, tags
 
 def _polygon_area(poly):
@@ -61,7 +64,7 @@ def _polygon_area(poly):
 
 
 def make_score_map(text_polys, tags, h, w):
-    min_text_size = cfg.MIN_TEXT_SIZE
+    min_text_size = cfg.TRAIN.MIN_TEXT_SIZE
     shrink_ratio = cfg.SHRINK_RATIO
 
     text_polys, ignore_tags = _validate_polygons(text_polys, tags, h, w)

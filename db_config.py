@@ -10,7 +10,7 @@ cfg.K = 10
 cfg.SHRINK_RATIO = 0.4
 cfg.THRESH_MIN = 0.3
 cfg.THRESH_MAX = 0.7
-cfg.MIN_TEXT_SIZE = 1
+
 # ['resnet_v1_50', 'resnet_v1_18', 'resnet_v2_50', 'resnet_v2_18', 'mobilenet_v2', 'mobilenet_v3']
 cfg.BACKBONE = 'resnet_v1_50'
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~train config~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -26,8 +26,9 @@ cfg.TRAIN.LOSS_BETA = 10.0
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~dataload & aug~~~~~~~~~~~~~~~~~~~~~~~~~~
 cfg.TRAIN.IMG_DIR = '/hostpersistent/zzh/dataset/open_data/ctw1500/train/text_image'
 cfg.TRAIN.LABEL_DIR = '/hostpersistent/zzh/dataset/open_data/ctw1500/train/text_label_curve'
-
 cfg.TRAIN.IMG_SIZE = 640
+cfg.TRAIN.MIN_TEXT_SIZE = 1
+cfg.TRAIN.MIN_AREA = 1
 cfg.TRAIN.IMG_SCALE = [0.5, 1, 1, 1, 1.5, 2.0]
 cfg.TRAIN.CROP_PROB = 0.9
 cfg.TRAIN.MIN_CROP_SIDE_RATIO = 0.001
