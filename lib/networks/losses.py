@@ -85,6 +85,17 @@ def smooth_l1_loss(pred, gt, mask, sigma=1.0):
         return tf.reduce_mean(tf.square(diff) * 0.5 * sigma2 * smoothL1_sign + \
                (deltas_abs - 0.5 / sigma2) * tf.abs(smoothL1_sign - 1))
 
+def compute_cls_acc(pred, gt, mask):
+
+    zero = tf.zeros_like(pred, tf.float32)
+    one = tf.ones_like(pred, tf.float32)
+
+    pred = tf.where(pred < 0.3, x=zero, y=one)
+    acc = tf.reduce_mean(tf.cast(tf.equal(pred * mask, gt * mask), tf.float32))
+
+    return acc
+
+
 def compute_loss(binarize_map, threshold_map, thresh_binary,
                  gt_score_maps, gt_threshold_map, gt_score_mask, gt_thresh_mask):
 
@@ -94,9 +105,15 @@ def compute_loss(binarize_map, threshold_map, thresh_binary,
 
     model_loss = cfg.TRAIN.LOSS_ALPHA * binarize_loss + cfg.TRAIN.LOSS_BETA * threshold_loss + thresh_binary_loss
 
-    tf.summary.scalar('binarize_loss', binarize_loss)
-    tf.summary.scalar('threshold_loss', threshold_loss)
-    tf.summary.scalar('thresh_binary_loss', thresh_binary_loss)
+    binarize_acc = compute_cls_acc(binarize_map, gt_score_maps, gt_score_mask)
+    thresh_binary_acc = compute_cls_acc(threshold_map, gt_threshold_map, gt_thresh_mask)
+
+    tf.summary.scalar('acc/binarize_acc', binarize_acc)
+    tf.summary.scalar('acc/thresh_binary_acc', thresh_binary_acc)
+
+    tf.summary.scalar('losses/binarize_loss', binarize_loss)
+    tf.summary.scalar('losses/threshold_loss', threshold_loss)
+    tf.summary.scalar('losses/thresh_binary_loss', thresh_binary_loss)
     return model_loss
 
 
