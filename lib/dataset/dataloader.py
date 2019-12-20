@@ -129,12 +129,12 @@ def generator(batchsize, random_scale=np.array(cfg.TRAIN.IMG_SCALE)):
                 import traceback
                 traceback.print_exc()
                 print(img_path)
-                print(polys[0])
-                img_input = img_input.astype(np.int)
-                for poly in polys:
-                    poly = np.array(poly, dtype=np.int)
-                    cv2.polylines(img_input, [poly.reshape((-1, 1, 2))], True, (0, 255, 0))
-                cv2.imwrite(img_name, img_input)
+                # print(polys[0])
+                # img_input = img_input.astype(np.int)
+                # for poly in polys:
+                #     poly = np.array(poly, dtype=np.int)
+                #     cv2.polylines(img_input, [poly.reshape((-1, 1, 2))], True, (0, 255, 0))
+                # cv2.imwrite(img_name, img_input)
                 continue
 
 
