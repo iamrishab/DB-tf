@@ -1,6 +1,7 @@
 import tensorflow as tf
 from db_config import cfg
 
+
 def dice_coefficient_loss(y_true_cls, y_pred_cls,
                      training_mask):
     '''
@@ -10,11 +11,12 @@ def dice_coefficient_loss(y_true_cls, y_pred_cls,
     :param training_mask:
     :return:
     '''
-    eps = 1e-5
+    eps = 1e-6
     intersection = tf.reduce_sum(y_true_cls * y_pred_cls * training_mask)
     union = tf.reduce_sum(y_true_cls * training_mask) + tf.reduce_sum(y_pred_cls * training_mask) + eps
     loss = 1. - (2 * intersection / union)
     return loss
+
 
 def balance_cross_entropy_loss(gt, pred, mask,
                                negative_ratio=3.0, eps=1e-6):
