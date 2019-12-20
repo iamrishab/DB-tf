@@ -6,25 +6,12 @@ from shapely.geometry import Polygon
 
 class SegDetectorRepresenter():
     def __init__(self, thresh=0.3, box_thresh=0.7, max_candidates=1000):
-        self.min_size = 3
+        self.min_size = 1
         self.thresh = thresh
         self.box_thresh = box_thresh
         self.max_candidates = max_candidates
 
     def __call__(self, input_batch, score_maps, is_output_polygon=False):
-        '''
-        batch: (image, polygons, ignore_tags
-        batch: a dict produced by dataloaders.
-            image: tensor of shape (N, C, H, W).
-            polygons: tensor of shape (N, K, 4, 2), the polygons of objective regions.
-            ignore_tags: tensor of shape (N, K), indicates whether a region is ignorable or not.
-            shape: the original shape of images.
-            filename: the original filenames of images.
-        pred:
-            binary: text region segmentation map, with shape (N, H, W)
-            thresh: [if exists] thresh hold prediction with shape (N, H, W)
-            thresh_binary: [if exists] binarized with threshhold, (N, H, W)
-        '''
         segmentation = self._binarize(score_maps)
         boxes_batch = []
         scores_batch = []
@@ -53,9 +40,8 @@ class SegDetectorRepresenter():
         scores = []
 
         contours, _ = cv2.findContours((bitmap * 255).astype(np.uint8), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
-
         for contour in contours[:self.max_candidates]:
-            epsilon = 0.01 * cv2.arcLength(contour, True)
+            epsilon = 0.005 * cv2.arcLength(contour, True)
             approx = cv2.approxPolyDP(contour, epsilon, True)
             points = approx.reshape((-1, 2))
             if points.shape[0] < 4:
@@ -86,9 +72,9 @@ class SegDetectorRepresenter():
 
             box[:, 0] = np.clip(np.round(box[:, 0] / width * dest_width), 0, dest_width)
             box[:, 1] = np.clip(np.round(box[:, 1] / height * dest_height), 0, dest_height)
-            boxes.append(box)
+            boxes.append(box.astype(np.float))
             scores.append(score)
-        return np.array(boxes), scores
+        return np.array(boxes, ), scores
 
     def _boxes_from_bitmap(self, pred, bitmap, dest_width, dest_height):
         '''
