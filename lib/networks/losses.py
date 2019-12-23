@@ -113,7 +113,7 @@ def compute_loss(binarize_map, threshold_map, thresh_binary,
 def compute_acc(binarize_map, threshold_map, thresh_binary,
                  gt_score_maps, gt_threshold_map, gt_score_mask, gt_thresh_mask):
     binarize_acc = compute_cls_acc(binarize_map, gt_score_maps, gt_score_mask)
-    thresh_binary_acc = compute_cls_acc(threshold_map, gt_threshold_map, gt_thresh_mask)
+    thresh_binary_acc = compute_cls_acc(thresh_binary, gt_score_maps, gt_score_mask)
 
     tf.summary.scalar('acc/binarize_acc', binarize_acc)
     tf.summary.scalar('acc/thresh_binary_acc', thresh_binary_acc)
