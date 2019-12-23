@@ -10,6 +10,7 @@ cfg.K = 10
 cfg.SHRINK_RATIO = 0.4
 cfg.THRESH_MIN = 0.3
 cfg.THRESH_MAX = 0.7
+cfg.FILTER_MIN_AREA = 1e-4
 
 # ['resnet_v1_50', 'resnet_v1_18', 'resnet_v2_50', 'resnet_v2_18', 'mobilenet_v2', 'mobilenet_v3']
 cfg.BACKBONE = 'resnet_v1_50'
@@ -52,13 +53,13 @@ cfg.TRAIN.TRAIN_LOGS = os.path.join('/hostpersistent/zzh/lab/DB-tf/', 'tf_logs')
 cfg.TRAIN.CHECKPOINTS_OUTPUT_DIR = os.path.join('/hostpersistent/zzh/lab/DB-tf/', 'ckpt')
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~restore and pretrain~~~~~~~~~~~~~~~~~~~~~
-cfg.TRAIN.RESTORE = False
-cfg.TRAIN.RESTORE_CKPT_PATH = os.path.join('/hostpersistent/zzh/lab/DB-tf/resnet18', 'ckpt')
-cfg.TRAIN.PRETRAINED_MODEL_PATH = '/hostpersistent/zzh/lab/DB-tf/ckpt/DB_resnet_v1_50_1218_model.ckpt-143421'
+cfg.TRAIN.RESTORE = True
+cfg.TRAIN.RESTORE_CKPT_PATH = os.path.join('/hostpersistent/zzh/lab/DB-tf/', 'ckpt')
+cfg.TRAIN.PRETRAINED_MODEL_PATH = '/hostpersistent/zzh/lab/DB-tf/ckpt/DB_resnet_v1_50_1219_model.ckpt-167661'
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~super em~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 cfg.TRAIN.LEARNING_RATE = 0.0001
-cfg.TRAIN.OPT = 'momentum'#'adam'#
+cfg.TRAIN.OPT = 'adam'#'momentum'#
 cfg.TRAIN.MOVING_AVERAGE_DECAY = 0.997
 
 

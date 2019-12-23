@@ -190,18 +190,20 @@ def main():
         except:
             assert 0, 'load error'
 
-        data_generator = get_batch(num_workers=cfg["TRAIN"]["NUM_READERS"],
-                                   batchsize=cfg["TRAIN"]["BATCH_SIZE_PER_GPU"] * len(gpus))
+        train_data_generator = get_batch(num_workers=cfg.TRAIN.NUM_READERS,
+                                   img_dir=cfg.TRAIN.IMG_DIR,
+                                   label_dir=cfg.TRAIN.LABEL_DIR,
+                                   batchsize=cfg.TRAIN.BATCH_SIZE_PER_GPU * len(gpus))
 
         start = time.time()
         for step in range(cfg["TRAIN"]["MAX_STEPS"]):
-            data = next(data_generator)
+            train_data = next(train_data_generator)
 
-            feed_dict = {input_images: data[0],
-                         input_score_maps: data[1],
-                         input_threshold_maps: data[3],
-                         input_score_masks: data[2],
-                         input_threshold_masks: data[4]}
+            feed_dict = {input_images: train_data[0],
+                         input_score_maps: train_data[1],
+                         input_threshold_maps: train_data[3],
+                         input_score_masks: train_data[2],
+                         input_threshold_masks: train_data[4]}
 
             ml, tl, _ = sess.run([model_loss, total_loss, train_op], feed_dict=feed_dict)
             if np.isnan(tl):

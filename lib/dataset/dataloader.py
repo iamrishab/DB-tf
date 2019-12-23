@@ -69,9 +69,9 @@ def make_train_labels(polys, tags, h, w):
 
     return score_map, score_mask, threshold_map, thresh_mask
 
-def generator(batchsize, random_scale=np.array(cfg.TRAIN.IMG_SCALE)):
+def generator(batchsize, img_dir, label_dir, random_scale=np.array(cfg.TRAIN.IMG_SCALE)):
 
-    img_list = os.listdir(cfg.TRAIN.IMG_DIR)
+    img_list = os.listdir(img_dir)
 
     while True:
         train_imgs = []
@@ -84,8 +84,8 @@ def generator(batchsize, random_scale=np.array(cfg.TRAIN.IMG_SCALE)):
 
         for img_name in img_list:
             try:
-                img_path = os.path.join(cfg.TRAIN.IMG_DIR, img_name)
-                label_path = os.path.join(cfg.TRAIN.LABEL_DIR, os.path.splitext(img_name)[0] + '.txt')
+                img_path = os.path.join(img_dir, img_name)
+                label_path = os.path.join(label_dir, os.path.splitext(img_name)[0] + '.txt')
 
                 img_input = np.zeros([cfg.TRAIN.IMG_SIZE, cfg.TRAIN.IMG_SIZE, 3], dtype=np.float32)
 
