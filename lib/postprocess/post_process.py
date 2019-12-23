@@ -1,8 +1,9 @@
 import cv2
 import numpy as np
 import pyclipper
-from shapely.geometry import Polygon
 
+from shapely.geometry import Polygon
+from db_config import cfg
 
 class SegDetectorRepresenter():
     def __init__(self, thresh=0.3, box_thresh=0.7, max_candidates=1000):
@@ -41,7 +42,7 @@ class SegDetectorRepresenter():
 
         contours, _ = cv2.findContours((bitmap * 255).astype(np.uint8), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
         for contour in contours[:self.max_candidates]:
-            epsilon = 0.005 * cv2.arcLength(contour, True)
+            epsilon = cfg.EPSILON_RATIO * cv2.arcLength(contour, True)
             approx = cv2.approxPolyDP(contour, epsilon, True)
             points = approx.reshape((-1, 2))
             if points.shape[0] < 4:
