@@ -7,6 +7,7 @@ cfg = edict()
 cfg.MEANS = [123.68, 116.78, 103.94]
 cfg.INPUT_MAX_SIZE = 640
 cfg.K = 10
+cfg.EPSILON_RATIO = 0.001
 cfg.SHRINK_RATIO = 0.4
 cfg.THRESH_MIN = 0.3
 cfg.THRESH_MAX = 0.7
@@ -17,7 +18,7 @@ cfg.BACKBONE = 'resnet_v1_50'
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~train config~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 cfg.TRAIN = edict()
-cfg.TRAIN.VERSION = '1219'
+cfg.TRAIN.VERSION = '1223'
 # 多gpu训练
 cfg.TRAIN.VIS_GPU = '3,4'
 cfg.TRAIN.BATCH_SIZE_PER_GPU = 2
@@ -53,9 +54,9 @@ cfg.TRAIN.TRAIN_LOGS = os.path.join('/hostpersistent/zzh/lab/DB-tf/', 'tf_logs')
 cfg.TRAIN.CHECKPOINTS_OUTPUT_DIR = os.path.join('/hostpersistent/zzh/lab/DB-tf/', 'ckpt')
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~restore and pretrain~~~~~~~~~~~~~~~~~~~~~
-cfg.TRAIN.RESTORE = True
+cfg.TRAIN.RESTORE = None
 cfg.TRAIN.RESTORE_CKPT_PATH = os.path.join('/hostpersistent/zzh/lab/DB-tf/', 'ckpt')
-cfg.TRAIN.PRETRAINED_MODEL_PATH = '/hostpersistent/zzh/lab/DB-tf/ckpt/DB_resnet_v1_50_1219_model.ckpt-167661'
+cfg.TRAIN.PRETRAINED_MODEL_PATH = None#'/hostpersistent/zzh/lab/DB-tf/ckpt/DB_resnet_v1_50_1219_model.ckpt-167661'
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~super em~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 cfg.TRAIN.LEARNING_RATE = 0.0001
@@ -63,3 +64,9 @@ cfg.TRAIN.OPT = 'adam'#'momentum'#
 cfg.TRAIN.MOVING_AVERAGE_DECAY = 0.997
 
 
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ eval ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+cfg.EVAL = edict()
+cfg.EVAL.IMG_DIR = '/hostpersistent/zzh/dataset/open_data/ctw1500/test/text_image'
+cfg.EVAL.LABEL_DIR = '/hostpersistent/zzh/dataset/open_data/ctw1500/test/text_label_circum'
+cfg.EVAL.NUM_READERS = 1
+cfg.EVAL.TEST_STEP = 5000
