@@ -69,10 +69,11 @@ def make_train_labels(polys, tags, h, w):
 
     return score_map, score_mask, threshold_map, thresh_mask
 
-def generator(batchsize, img_dir, label_dir, random_scale=np.array(cfg.TRAIN.IMG_SCALE)):
+def generator(batchsize, img_dir, label_dir, random_scale=np.array(cfg.TRAIN.IMG_SCALE), is_eval=False):
 
     img_list = os.listdir(img_dir)
 
+    epoch = 0
     while True:
         train_imgs = []
         train_score_maps = []
@@ -92,14 +93,14 @@ def generator(batchsize, img_dir, label_dir, random_scale=np.array(cfg.TRAIN.IMG
                 img = cv2.imread(img_path)[:,:, ::-1]
                 img, (ratio_h, ratio_w) = resize_img(img, cfg.TRAIN.IMG_SIZE)
 
-                if random.random() < cfg.TRAIN.DATA_AUG_PROB:
+                if random.random() < cfg.TRAIN.DATA_AUG_PROB and not is_eval:
                     img = det_aug(img)
 
                 polys, tags = load_labels(label_path)
                 polys[:, :, 0] *= ratio_w
                 polys[:, :, 1] *= ratio_h
 
-                if random.random() < cfg.TRAIN.CROP_PROB:
+                if (random.random() < cfg.TRAIN.CROP_PROB) and (not is_eval):
                     img, polys, tags = crop_area(img, polys, tags)
                     img, (ratio_h, ratio_w) = resize_img(img, cfg.TRAIN.IMG_SIZE)
                     polys[:, :, 0] *= ratio_w
@@ -118,7 +119,10 @@ def generator(batchsize, img_dir, label_dir, random_scale=np.array(cfg.TRAIN.IMG
                 train_thresh_masks.append(thresh_mask[:, :, np.newaxis])
 
                 if len(train_imgs) == batchsize:
-                    yield train_imgs, train_score_maps, train_socre_masks, train_thresh_maps, train_thresh_masks
+                    if is_eval:
+                        yield train_imgs, train_score_maps, train_socre_masks, train_thresh_maps, train_thresh_masks, epoch
+                    else:
+                        yield train_imgs, train_score_maps, train_socre_masks, train_thresh_maps, train_thresh_masks
                     train_imgs = []
                     train_score_maps = []
                     train_socre_masks = []
@@ -136,6 +140,7 @@ def generator(batchsize, img_dir, label_dir, random_scale=np.array(cfg.TRAIN.IMG
                 #     cv2.polylines(img_input, [poly.reshape((-1, 1, 2))], True, (0, 255, 0))
                 # cv2.imwrite(img_name, img_input)
                 continue
+        epoch += 1
 
 
 def get_batch(num_workers, **kwargs):
