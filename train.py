@@ -9,11 +9,15 @@ from tensorflow.contrib import slim
 from db_config import cfg
 
 import lib.networks.model as model
-from lib.networks.losses import compute_loss
+from lib.networks.losses import compute_loss, compute_acc
 from lib.dataset.dataloader import get_batch
 
 import warnings
 warnings.filterwarnings("ignore")
+
+def make_dir(dir):
+    if not os.path.exists(dir):
+        os.makedirs(dir)
 
 def tower_loss(images, gt_score_maps, gt_threshold_map, gt_score_mask,
                gt_thresh_mask, reuse_variables):
@@ -41,7 +45,7 @@ def tower_loss(images, gt_score_maps, gt_threshold_map, gt_score_mask,
         tf.summary.scalar('model_loss', model_loss)
         tf.summary.scalar('total_loss', total_loss)
 
-    return total_loss, model_loss
+    return total_loss, model_loss, binarize_map, threshold_map, thresh_binary
 
 
 def average_gradients(tower_grads):
@@ -129,6 +133,8 @@ def main():
 
     tower_grads = []
     reuse_variables = None
+    total_binarize_acc = 0
+    total_thresh_binary_acc = 0
     for i, gpu_id in enumerate(gpus):
         print('gpu_id', gpu_id)
         with tf.device('/gpu:' + gpu_id):
@@ -138,7 +144,12 @@ def main():
                 gt_thresholds = input_threshold_maps_split[i]
                 gt_score_masks = input_score_masks_split[i]
                 gt_threshold_masks = input_threshold_masks_split[i]
-                total_loss, model_loss = tower_loss(gt_imgs, gt_scores, gt_thresholds, gt_score_masks, gt_threshold_masks, reuse_variables)
+                total_loss, model_loss, binarize_map, threshold_map, thresh_binary = \
+                    tower_loss(gt_imgs, gt_scores, gt_thresholds, gt_score_masks, gt_threshold_masks, reuse_variables)
+                binarize_acc, thresh_binary_acc = compute_acc(binarize_map, threshold_map, thresh_binary,
+                              gt_scores, gt_thresholds, gt_score_masks, gt_threshold_masks)
+                total_binarize_acc += binarize_acc
+                total_thresh_binary_acc += thresh_binary_acc
                 reuse_variables = True
 
                 batch_norm_updates_op = tf.group(*tf.get_collection(tf.GraphKeys.UPDATE_OPS, scope))
@@ -148,6 +159,9 @@ def main():
 
     grads = average_gradients(tower_grads)
     apply_gradient_op = opt.apply_gradients(grads, global_step=global_step)
+
+    avg_binarize_acc = total_binarize_acc / 2.0
+    avg_thresh_binary_acc = total_thresh_binary_acc / 2.0
 
     summary_op = tf.summary.merge_all()
 
@@ -160,9 +174,16 @@ def main():
 
     saver = tf.train.Saver(tf.global_variables(), max_to_keep=cfg.TRAIN.SAVE_MAX)
 
-    if not tf.gfile.Exists(cfg["TRAIN"]["TRAIN_LOGS"]):
-        tf.gfile.MkDir(cfg["TRAIN"]["TRAIN_LOGS"])
-    summary_writer = tf.summary.FileWriter(cfg["TRAIN"]["TRAIN_LOGS"], tf.get_default_graph())
+
+    train_logs_dir = os.path.join(cfg.TRAIN.TRAIN_LOGS, 'train')
+    val_logs_dir = os.path.join(cfg.TRAIN.TRAIN_LOGS, 'val')
+
+    make_dir(train_logs_dir)
+    make_dir(val_logs_dir)
+
+    train_summary_writer = tf.summary.FileWriter(train_logs_dir, tf.get_default_graph())
+    val_summary_writer = tf.summary.FileWriter(val_logs_dir, tf.get_default_graph())
+
 
     init = tf.global_variables_initializer()
 
@@ -191,21 +212,34 @@ def main():
             assert 0, 'load error'
 
         train_data_generator = get_batch(num_workers=cfg.TRAIN.NUM_READERS,
-                                   img_dir=cfg.TRAIN.IMG_DIR,
-                                   label_dir=cfg.TRAIN.LABEL_DIR,
-                                   batchsize=cfg.TRAIN.BATCH_SIZE_PER_GPU * len(gpus))
+                                         img_dir=cfg.TRAIN.IMG_DIR,
+                                         label_dir=cfg.TRAIN.LABEL_DIR,
+                                         batchsize=cfg.TRAIN.BATCH_SIZE_PER_GPU * len(gpus))
+
+        val_data_generator = get_batch(num_workers=10,
+                                       img_dir=cfg.EVAL.IMG_DIR,
+                                       label_dir=cfg.EVAL.LABEL_DIR,
+                                       batchsize=cfg.TRAIN.BATCH_SIZE_PER_GPU * len(gpus))
+
+        test_data_generator = get_batch(num_workers=1,
+                                        img_dir=cfg.EVAL.IMG_DIR,
+                                        label_dir=cfg.EVAL.LABEL_DIR,
+                                        batchsize=cfg.TRAIN.BATCH_SIZE_PER_GPU * len(gpus),
+                                        is_eval=True)
+
+        test_epoch = 0
 
         start = time.time()
         for step in range(cfg["TRAIN"]["MAX_STEPS"]):
             train_data = next(train_data_generator)
 
-            feed_dict = {input_images: train_data[0],
+            train_feed_dict = {input_images: train_data[0],
                          input_score_maps: train_data[1],
                          input_threshold_maps: train_data[3],
                          input_score_masks: train_data[2],
                          input_threshold_masks: train_data[4]}
 
-            ml, tl, _ = sess.run([model_loss, total_loss, train_op], feed_dict=feed_dict)
+            ml, tl, _ = sess.run([model_loss, total_loss, train_op], feed_dict=train_feed_dict)
             if np.isnan(tl):
                 train_logger.info('Loss diverged, stop training')
                 break
@@ -224,8 +258,39 @@ def main():
                            global_step=global_step)
 
             if step % cfg["TRAIN"]["SAVE_SUMMARY_STEPS"] == 0:
-                _, tl, summary_str = sess.run([train_op, total_loss, summary_op], feed_dict=feed_dict)
-                summary_writer.add_summary(summary_str, global_step=step)
+                _, tl, train_summary_str = sess.run([train_op, total_loss, summary_op], feed_dict=train_feed_dict)
+                train_summary_writer.add_summary(train_summary_str, global_step=step)
+
+                val_data = next(val_data_generator)
+                val_feed_dict = {input_images: val_data[0],
+                                  input_score_maps: val_data[1],
+                                  input_threshold_maps: val_data[3],
+                                  input_score_masks: val_data[2],
+                                  input_threshold_masks: val_data[4]}
+                eval_summary_str = sess.run(summary_op, feed_dict=val_feed_dict)
+
+                val_summary_writer.add_summary(eval_summary_str, global_step=step)
+
+            if step % cfg.EVAL.TEST_STEP == 0 and step != 0:
+                temp_epoch = test_epoch
+                print('~~~~~~~~~~~~~~~~~~start to test~~~~~~~~~~~~~~~~~~~~~')
+                avg_bc = []
+                avg_tbc = []
+                while temp_epoch!=test_epoch:
+                    test_data = next(test_data_generator)
+                    test_feed_dict = {input_images: test_data[0],
+                                      input_score_maps: test_data[1],
+                                      input_threshold_maps: test_data[3],
+                                      input_score_masks: test_data[2],
+                                      input_threshold_masks: test_data[4]}
+                    test_epoch = test_data[5]
+                    bc, tbc = sess.run([avg_binarize_acc, avg_thresh_binary_acc],
+                                                        feed_dict=test_feed_dict)
+                    avg_bc.extend(bc)
+                    avg_tbc.extend(tbc)
+
+                print('avg binarize acc is :', sum(avg_bc)/len(avg_bc))
+                print('avg thresh binary acc is :', sum(avg_tbc)/len(avg_tbc))
 
 
 if __name__ == '__main__':

@@ -105,16 +105,20 @@ def compute_loss(binarize_map, threshold_map, thresh_binary,
 
     model_loss = cfg.TRAIN.LOSS_ALPHA * binarize_loss + cfg.TRAIN.LOSS_BETA * threshold_loss + thresh_binary_loss
 
+    tf.summary.scalar('losses/binarize_loss', binarize_loss)
+    tf.summary.scalar('losses/threshold_loss', threshold_loss)
+    tf.summary.scalar('losses/thresh_binary_loss', thresh_binary_loss)
+    return model_loss
+
+def compute_acc(binarize_map, threshold_map, thresh_binary,
+                 gt_score_maps, gt_threshold_map, gt_score_mask, gt_thresh_mask):
     binarize_acc = compute_cls_acc(binarize_map, gt_score_maps, gt_score_mask)
     thresh_binary_acc = compute_cls_acc(threshold_map, gt_threshold_map, gt_thresh_mask)
 
     tf.summary.scalar('acc/binarize_acc', binarize_acc)
     tf.summary.scalar('acc/thresh_binary_acc', thresh_binary_acc)
 
-    tf.summary.scalar('losses/binarize_loss', binarize_loss)
-    tf.summary.scalar('losses/threshold_loss', threshold_loss)
-    tf.summary.scalar('losses/thresh_binary_loss', thresh_binary_loss)
-    return model_loss
+    return binarize_acc, thresh_binary_acc
 
 
 
