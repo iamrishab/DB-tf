@@ -79,16 +79,12 @@ revise the `db_config.py`
     
 #### 4. Pretrain or restore model.
 
-If you want to pretrain model,
-
-revise the `db_config.py`
+If you want to pretrain model, revise the `db_config.py`
 
     cfg.TRAIN.RESTORE = False
     cfg.TRAIN.PRETRAINED_MODEL_PATH = 'pretrain model path'
     
-If you want to restore model,
-
-revise the `db_config.py`
+If you want to restore model, revise the `db_config.py`
 
     cfg.TRAIN.RESTORE = True
     cfg.TRAIN.RESTORE_CKPT_PATH = 'checkpoint path'
@@ -97,7 +93,7 @@ revise the `db_config.py`
 
     python train.py
 
-### 6. Tensorboard show
+#### 6. Tensorboard show
     
     cd 'tensorboard path'
     tensorboard --logdir=./
