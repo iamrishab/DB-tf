@@ -74,6 +74,17 @@ def model(images, weight_decay=1e-5, is_training=True):
 
             num_outputs = [None, 128, 64, 32]
 
+            # size = K+(K-1)*(r-1)
+            if cfg.ASPP_LAYER:
+                with tf.variable_scope('aspp_layer'):
+                    f_32x = f[0]
+                    f_32x_1 = slim.conv2d(f_32x, 256, 1)
+                    f_32x_2 = slim.conv2d(f_32x, 256, 3)
+                    f_32x_3 = slim.conv2d(f_32x, 256, 3, rate=3)
+                    f_32x_4 = slim.conv2d(f_32x, 256, 3, rate=6)
+                    aspp_32x = tf.concat([f_32x_1, f_32x_2, f_32x_3, f_32x_4], axis=-1)
+                    f[0] = slim.conv2d(aspp_32x, 2048, 1)
+
             for i in range(len(f)):
                 if i == 0:
                     h[i] = f[i]

@@ -15,10 +15,11 @@ cfg.FILTER_MIN_AREA = 1e-4
 
 # ['resnet_v1_50', 'resnet_v1_18', 'resnet_v2_50', 'resnet_v2_18', 'mobilenet_v2', 'mobilenet_v3']
 cfg.BACKBONE = 'resnet_v1_50'
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~train config~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+cfg.ASPP_LAYER = False
+# ~~~~~~~~~~~~~~~~~~z~~~~~~~~~~~~~train config~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 cfg.TRAIN = edict()
-cfg.TRAIN.VERSION = '1223'
+cfg.TRAIN.VERSION = 'aspp'
 # 多gpu训练
 cfg.TRAIN.VIS_GPU = '3,4'
 cfg.TRAIN.BATCH_SIZE_PER_GPU = 2
@@ -56,7 +57,7 @@ cfg.TRAIN.CHECKPOINTS_OUTPUT_DIR = os.path.join('/hostpersistent/zzh/lab/DB-tf/'
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~restore and pretrain~~~~~~~~~~~~~~~~~~~~~
 cfg.TRAIN.RESTORE = None
 cfg.TRAIN.RESTORE_CKPT_PATH = os.path.join('/hostpersistent/zzh/lab/DB-tf/', 'ckpt')
-cfg.TRAIN.PRETRAINED_MODEL_PATH = None#'/hostpersistent/zzh/lab/DB-tf/ckpt/DB_resnet_v1_50_1219_model.ckpt-167661'
+cfg.TRAIN.PRETRAINED_MODEL_PATH = '/hostpersistent/zzh/lab/DB-tf/ckpt/DB_resnet_v1_50_1223_model.ckpt-121201'
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~super em~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 cfg.TRAIN.LEARNING_RATE = 0.0001
