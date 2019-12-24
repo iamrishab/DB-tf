@@ -50,10 +50,16 @@ revise the `db_config.py`
 #### 1. Get the CTW1500 train images path and labels path.
 
 revise the `db_config.py`
-
+    
+    # Train data config
     cfg.TRAIN.IMG_DIR = '/path/ctw1500/train/text_image'
     cfg.TRAIN.LABEL_DIR = '/path/ctw1500/train/text_label_curve'
-
+    
+    # Val or test data config
+    cfg.EVAL.IMG_DIR = '/path/ctw1500/test/text_image'
+    cfg.EVAL.LABEL_DIR = '/path/ctw1500/test/text_label_circum'
+    
+    
 #### 2. Muti gpu train and config network.
 
 revise the `db_config.py`
