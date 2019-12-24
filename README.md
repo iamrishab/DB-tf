@@ -33,7 +33,8 @@ Download from [BaiduYun](https://pan.baidu.com/s/1yG_191LemrQa7K0h7Wispw) (key:y
 revise the `db_config.py`
 
     cfg.BACKBONE = 'resnet_v1_50'
-
+    # if trained model name does not have aspp, it should be False
+    cfg.ASPP_LAYER = False
 
 ### 3.Start to test img.
 
@@ -68,7 +69,10 @@ revise the `db_config.py`
     
     # only support 'resnet_v1_50' and 'resnet_v1_18'
     cfg.BACKBONE = 'resnet_v1_50' 
+    # if you want to train aspp network, it should be True
+    cfg.ASPP_LAYER = False
     cfg.TRAIN.VIS_GPU = '5,6' # single gpu -> '0'
+    
     
 #### 3. Save train logs and models.
 
