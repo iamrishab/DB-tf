@@ -27,7 +27,7 @@ Download from [BaiduYun](https://pan.baidu.com/s/1yG_191LemrQa7K0h7Wispw) (key:y
 
 | Model 	| BaiduYun 	| GoogleDrive 	|
 |------------	|-------	|-------	|
-| ResNet-50| [BaiduYun](https://pan.baidu.com/s/1Pfwl8M6aBwuUpJbP2jVFuw)| [GooleDrive](https://drive.google.com/drive/folders/1uJL6sf6EP6ekK_4XLNGLt1U9EGRJ0eDO?usp=sharing)|
+| ResNet-50| [BaiduYun](https://pan.baidu.com/s/1Pfwl8M6aBwuUpJbP2jVFuw)| [GoogleDrive](https://drive.google.com/drive/folders/1uJL6sf6EP6ekK_4XLNGLt1U9EGRJ0eDO?usp=sharing)|
 
 ### 2.Config network
 revise the `db_config.py`
@@ -147,5 +147,5 @@ Test on RTX 2080 Ti.
 - [ ] Eval code
 - [x] Data augmentation(crop and random img aug)
 - [x] More backbones
-- [ ] Add ASPP
+- [ ] Add dilation conv
 - [ ] Deformable Convolutional Networks
