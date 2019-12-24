@@ -1,0 +1,9 @@
+numpy
+imgaug
+pyclipper
+easydict
+Shapely
+tqdm
+tensorflow
+imageio
+opencv_python
