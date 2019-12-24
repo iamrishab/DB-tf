@@ -15,10 +15,19 @@ Part of the code is inherited from [DB](https://github.com/MhLiao/DB).
 - easydict
 
 
-## Dataset
-This repo is train on CTW1500 dataset.
-Download from [BaiduYun](https://pan.baidu.com/s/1yG_191LemrQa7K0h7Wispw) (key:yjiz) or 
-[OneDrive](https://1drv.ms/u/s!Aplwt7jiPGKilH4XzZPoKrO7Aulk).
+## ToDo List
+
+- [x] Release trained models
+- [x] Training code
+- [x] Inference code
+- [x] Muti gpu training
+- [x] Tensorboard support
+- [x] Exp another train losses 
+- [ ] Eval code
+- [x] Data augmentation(crop and random img aug)
+- [x] More backbones
+- [x] Add dilation conv(ASPP layer)
+- [ ] Deformable Convolutional Networks
 
 
 ## Test
@@ -48,6 +57,13 @@ revise the `db_config.py`
 | ![poly_img](figures/org.jpg) 	| ![poly_img](figures/1039_polyshow.jpg) 	| ![bbox_img](figures/1039_bboxshow.jpg) 	|
 | binarize_map |  threshold_map	| thresh_binary |
 | ![bin_map](figures/1039_binarize_map.jpg) |  ![thres_map](figures/1039_threshold_map.jpg)	| ![bin_thres_map](figures/1039_thresh_binary.jpg) | 
+
+
+## Dataset
+This repo is train on CTW1500 dataset.
+Download from [BaiduYun](https://pan.baidu.com/s/1yG_191LemrQa7K0h7Wispw) (key:yjiz) or 
+[OneDrive](https://1drv.ms/u/s!Aplwt7jiPGKilH4XzZPoKrO7Aulk).
+
 
 ## Training model
 #### 1. Get the CTW1500 train images path and labels path.
@@ -135,19 +151,3 @@ Test on RTX 2080 Ti.
 | ResNet-18 	| × | 512	| 16.9 | 4.5 | 46.7 |
 | ResNet-18 	| × | 736	| 32.7 | 5.7 | 26 |
 | ResNet-50 	| √ | 640	| 32.6 | --- | --- |
-
-
-
-## ToDo List
-
-- [x] Release trained models
-- [x] Training code
-- [x] Inference code
-- [x] Muti gpu training
-- [x] Tensorboard support
-- [x] Exp another train losses 
-- [ ] Eval code
-- [x] Data augmentation(crop and random img aug)
-- [x] More backbones
-- [x] Add dilation conv(ASPP layer)
-- [ ] Deformable Convolutional Networks
