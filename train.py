@@ -273,7 +273,7 @@ def main():
 
             if step % cfg.EVAL.TEST_STEP == 0 and step != 0:
                 temp_epoch = test_epoch
-                print('~~~~~~~~~~~~~~~~~~start to test~~~~~~~~~~~~~~~~~~~~~')
+                train_logger.info('~~~~~~~~~~~~~~~~~~start to test~~~~~~~~~~~~~~~~~~~~~')
                 avg_bc = []
                 avg_tbc = []
                 while temp_epoch==test_epoch:
@@ -290,8 +290,8 @@ def main():
                     avg_bc.append(bc)
                     avg_tbc.append(tbc)
 
-                print('avg binarize acc is :', sum(avg_bc)/len(avg_bc))
-                print('avg thresh binary acc is :', sum(avg_tbc)/len(avg_tbc))
+                train_logger.info('avg binarize acc is :{}'.format(sum(avg_bc)/len(avg_bc)))
+                train_logger.info('avg thresh binary acc is :{}'.format(sum(avg_tbc)/len(avg_tbc)))
 
 
 if __name__ == '__main__':
