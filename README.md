@@ -89,13 +89,29 @@ revise the `db_config.py`
 
     python train.py
 
-tensorboard show
+### 6. Tensorboard show
+    
+    cd 'tensorboard path'
+    tensorboard --logdir=./
 
-|   binarize_loss	|   thresh_binary_loss	|
+Red line is train logs, blue line is val logs.
+
+Losses show
+
+|   binarize loss	|   threshold loss	|threshold binary loss	|
+|------------	|-------	|-------	|
+| ![binarize_loss](figures/bloss.png) 	| ![threshold loss](figures/tloss.png)	|![thresh_binary_loss](figures/tbloss.png)	|
+|   model_loss 	|   total_loss	|	|
+| ![model_loss](figures/mloss.png) 	| ![total_loss](figures/ttloss.png) 	| |
+
+
+Acc show
+
+|   binarize acc	|   threshold binary acc	|
 |------------	|-------	|
-| ![binarize_loss](figures/1.png) 	| ![thresh_binary_loss](figures/3.png)	|
-|   model_loss 	|   total_loss	|
-| ![model_loss](figures/2.png) 	| ![total_loss](figures/4.png) 	|
+| ![binarize acc](figures/bacc.png) 	| ![threshold binary acc](figures/tbacc.png)	|
+
+
 
 ## Experiment
 
