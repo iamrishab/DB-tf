@@ -24,8 +24,11 @@ Download from [BaiduYun](https://pan.baidu.com/s/1yG_191LemrQa7K0h7Wispw) (key:y
 ## Test
 
 ### 1.Download model.
-Download from [ResNet-50](https://pan.baidu.com/s/1p6VEDQdxR3wn66L58QnK6w).
+Download from [ResNet-50](https://pan.baidu.com/s/1YWK1JjoJBdKMbagV8g_dgQ).
 
+| Model 	| BaiduYun 	| GoogleDrive 	|
+|------------	|-------	|-------	|
+| ResNet-50| [BaiduYun](https://pan.baidu.com/s/1Pfwl8M6aBwuUpJbP2jVFuw)| [GooleDrive](https://drive.google.com/drive/folders/1uJL6sf6EP6ekK_4XLNGLt1U9EGRJ0eDO?usp=sharing)|
 
 ### 2.Config network
 revise the `db_config.py`
