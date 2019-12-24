@@ -25,8 +25,8 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.contrib import slim as contrib_slim
 
-from nets.mobilenet import conv_blocks as ops
-from nets.mobilenet import mobilenet as lib
+from lib.networks.mobilenet import conv_blocks as ops
+from lib.networks.mobilenet import mobilenet as lib
 
 slim = contrib_slim
 op = lib.op
