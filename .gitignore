@@ -1,6 +1,7 @@
 # pycharm
 .idea
 *.xml
+.DS_Store
 
 # model
 #checkpoints
@@ -11,9 +12,9 @@
 
 # image
 #*.png
-#*.jpg
-#*.JPG
-#*.jpeg
+*.jpg
+*.JPG
+*.jpeg
 
 # txt result
 *.txt
