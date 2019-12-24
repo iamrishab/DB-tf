@@ -276,7 +276,7 @@ def main():
                 print('~~~~~~~~~~~~~~~~~~start to test~~~~~~~~~~~~~~~~~~~~~')
                 avg_bc = []
                 avg_tbc = []
-                while temp_epoch!=test_epoch:
+                while temp_epoch==test_epoch:
                     test_data = next(test_data_generator)
                     test_feed_dict = {input_images: test_data[0],
                                       input_score_maps: test_data[1],
@@ -286,8 +286,9 @@ def main():
                     test_epoch = test_data[5]
                     bc, tbc = sess.run([avg_binarize_acc, avg_thresh_binary_acc],
                                                         feed_dict=test_feed_dict)
-                    avg_bc.extend(bc)
-                    avg_tbc.extend(tbc)
+
+                    avg_bc.append(bc)
+                    avg_tbc.append(tbc)
 
                 print('avg binarize acc is :', sum(avg_bc)/len(avg_bc))
                 print('avg thresh binary acc is :', sum(avg_tbc)/len(avg_tbc))
