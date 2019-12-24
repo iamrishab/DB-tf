@@ -6,17 +6,18 @@ import argparse
 import numpy as np
 import tensorflow as tf
 
-
+from db_config import cfg
+from shapely.geometry import Polygon
 from lib.postprocess.post_process import SegDetectorRepresenter
 import lib.networks.model as model
 
 
 def get_args():
     parser = argparse.ArgumentParser(description='DB-tf')
-    parser.add_argument('--ckptpath', default='/hostpersistent/zzh/lab/DB-tf/ckpt/DB_resnet_v1_50_1219_model.ckpt-22221',
+    parser.add_argument('--ckptpath', default='/hostpersistent/zzh/lab/DB-tf/ckpt/DB_resnet_v1_50_1223_model.ckpt-121201',
                         type=str,
                         help='load model')
-    parser.add_argument('--imgpath', default='/hostpersistent/zzh/dataset/open_data/ctw1500/test/text_image/1027.jpg',
+    parser.add_argument('--imgpath', default='/hostpersistent/zzh/dataset/open_data/ctw1500/test/text_image/1012.jpg',
                         type=str)
     parser.add_argument('--gpuid', default='0',
                         type=str)
@@ -68,11 +69,18 @@ class DB():
         s = time.time()
         boxes, scores = self.decoder([resized_img], binarize_map, ispoly)
         boxes = boxes[0]
-        for box in boxes:
+        area = h * w
+        res_boxes = []
+        res_scores = []
+        for i, box in enumerate(boxes):
             box[:, 0] *= ratio[1]
             box[:, 1] *= ratio[0]
-        scores = scores[0]
+            if Polygon(box).convex_hull.area > cfg.FILTER_MIN_AREA*area:
+                res_boxes.append(box)
+                res_scores.append(scores[0][i])
         post_time = time.time()-s
+        # print('img area:', h * w)
+
 
         if show_res:
             img_name = os.path.splitext(os.path.split(img_path)[-1])[0]
@@ -80,12 +88,12 @@ class DB():
             cv2.imwrite('show/' + img_name + '_binarize_map.jpg', binarize_map[0][0:size[0], 0:size[1], :]*255)
             cv2.imwrite('show/' + img_name + '_threshold_map.jpg', threshold_map[0][0:size[0], 0:size[1], :]*255)
             cv2.imwrite('show/' + img_name + '_thresh_binary.jpg', thresh_binary[0][0:size[0], 0:size[1], :]*255)
-            for box in boxes:
+            for box in res_boxes:
                 cv2.polylines(img, [box.astype(np.int).reshape([-1, 1, 2])], True, (0, 255, 0))
-
+                # print(Polygon(box).convex_hull.area, Polygon(box).convex_hull.area/area)
             cv2.imwrite('show/' + img_name + '_show.jpg', img)
 
-        return boxes, scores, (net_time, post_time)
+        return res_boxes, res_scores, (net_time, post_time)
 
 
     def detect_batch(self, batch):
