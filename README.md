@@ -24,7 +24,6 @@ Download from [BaiduYun](https://pan.baidu.com/s/1yG_191LemrQa7K0h7Wispw) (key:y
 ## Test
 
 ### 1.Download model.
-Download from [ResNet-50](https://pan.baidu.com/s/1YWK1JjoJBdKMbagV8g_dgQ).
 
 | Model 	| BaiduYun 	| GoogleDrive 	|
 |------------	|-------	|-------	|
