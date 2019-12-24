@@ -9,12 +9,6 @@ Part of the code is inherited from [DB](https://github.com/MhLiao/DB).
 ![net](figures/net.png)
 
 
-## Requirements:
-- Python3
-- Tensorflow >= 1.13 
-- easydict
-
-
 ## ToDo List
 
 - [x] Release trained models
@@ -28,6 +22,11 @@ Part of the code is inherited from [DB](https://github.com/MhLiao/DB).
 - [x] More backbones
 - [x] Add dilation conv(ASPP layer)
 - [ ] Deformable Convolutional Networks
+
+
+## Install
+
+    pip install -r requirements.txt
 
 
 ## Test
