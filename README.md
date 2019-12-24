@@ -121,14 +121,16 @@ Acc show
 
 Test on RTX 2080 Ti.
 
-|   BackBone	|   Input Size	|   Infernce Time(ms)	|	PostProcess Time(ms) | FPS |
-|------------	|-------	|-------	|-------	|-------	|
-| ResNet-50 	| 320	| 13.3 | 2.9 | 61.7 |
-| ResNet-50 	| 512	| 19.2 | 4.5 | 42.2 |
-| ResNet-50 	| 736	| 33.2 | 5.7 | 25.7 |
-| ResNet-18 	| 320	|  12.2 | 2.9 | 66.2 |
-| ResNet-18 	| 512	| 16.9 | 4.5 | 46.7 |
-| ResNet-18 	| 736	| 32.7 | 5.7 | 26 |
+|   BackBone	| ASPP |   Input Size	|   Infernce Time(ms)	|	PostProcess Time(ms) | FPS |
+|------------	|------ |--------	|-------	|-------	|-------	|
+| ResNet-50 	| × | 320	| 13.3 | 2.9 | 61.7 |
+| ResNet-50 	| × | 512	| 19.2 | 4.5 | 42.2 |
+| ResNet-50 	| × | 640	| 28.9 | 5.2 | 29.3 |
+| ResNet-50 	| × | 736	| 33.2 | 5.7 | 25.7 |
+| ResNet-18 	| × | 320	|  12.2 | 2.9 | 66.2 |
+| ResNet-18 	| × | 512	| 16.9 | 4.5 | 46.7 |
+| ResNet-18 	| × | 736	| 32.7 | 5.7 | 26 |
+| ResNet-50 	| √ | 640	| 32.6 | --- | --- |
 
 
 
@@ -143,5 +145,5 @@ Test on RTX 2080 Ti.
 - [ ] Eval code
 - [x] Data augmentation(crop and random img aug)
 - [x] More backbones
-- [ ] Add dilation conv
+- [x] Add dilation conv(ASPP layer)
 - [ ] Deformable Convolutional Networks
