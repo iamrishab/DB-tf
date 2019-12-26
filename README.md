@@ -36,7 +36,7 @@ Part of the code is inherited from [DB](https://github.com/MhLiao/DB).
 | Model 	| Download link 	|
 |------------	|-------	|
 | ResNet-50| [BaiduYun](https://pan.baidu.com/s/1Pfwl8M6aBwuUpJbP2jVFuw), [GoogleDrive](https://drive.google.com/drive/folders/1uJL6sf6EP6ekK_4XLNGLt1U9EGRJ0eDO?usp=sharing)|
-| ResNet-50-ASPP |[BaiduYun](https://pan.baidu.com/s/1OlMbhLSaQYb4U1VZZGabHg), [GoogleDrive](https://drive.google.com/open?id=1s91HWS4dtXCFv5x5-YlCaj-KbobnEEUu)|
+| ResNet-50-ASPP |[BaiduYun](https://pan.baidu.com/s/1OlMbhLSaQYb4U1VZZGabHgf), [GoogleDrive](https://drive.google.com/open?id=1s91HWS4dtXCFv5x5-YlCaj-KbobnEEUuf)|
 ### 2.Config network
 revise the `db_config.py`
 
