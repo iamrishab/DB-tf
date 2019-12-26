@@ -44,8 +44,8 @@ def resize_img(img, max_size=736):
     resize_h = int(ratio * h)
     resize_w = int(ratio * w)
 
-    resize_h = resize_h if resize_h % 32 == 0 else (resize_h // 32 - 1) * 32
-    resize_w = resize_w if resize_w % 32 == 0 else (resize_w // 32 - 1) * 32
+    resize_h = resize_h if resize_h % 32 == 0 else abs(resize_h // 32 - 1) * 32
+    resize_w = resize_w if resize_w % 32 == 0 else abs(resize_w // 32 - 1) * 32
     resized_img = cv2.resize(img, (int(resize_w), int(resize_h)))
 
     ratio_h = resize_h / float(h)
