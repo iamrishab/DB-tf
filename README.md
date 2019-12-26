@@ -33,15 +33,15 @@ Part of the code is inherited from [DB](https://github.com/MhLiao/DB).
 
 ### 1.Download model.
 
-| Model 	| BaiduYun 	| GoogleDrive 	|
-|------------	|-------	|-------	|
-| ResNet-50| [BaiduYun](https://pan.baidu.com/s/1Pfwl8M6aBwuUpJbP2jVFuw)| [GoogleDrive](https://drive.google.com/drive/folders/1uJL6sf6EP6ekK_4XLNGLt1U9EGRJ0eDO?usp=sharing)|
-
+| Model 	| Download link 	|
+|------------	|-------	|
+| ResNet-50| [BaiduYun](https://pan.baidu.com/s/1Pfwl8M6aBwuUpJbP2jVFuw), [GoogleDrive](https://drive.google.com/drive/folders/1uJL6sf6EP6ekK_4XLNGLt1U9EGRJ0eDO?usp=sharing)|
+| ResNet-50-ASPP |[BaiduYun](https://pan.baidu.com/s/1OlMbhLSaQYb4U1VZZGabHg), [GoogleDrive](https://drive.google.com/open?id=1s91HWS4dtXCFv5x5-YlCaj-KbobnEEUu)|
 ### 2.Config network
 revise the `db_config.py`
 
     cfg.BACKBONE = 'resnet_v1_50'
-    # if trained model name does not have aspp, it should be False
+    # if trained model name does not have aspp, it should be False.
     cfg.ASPP_LAYER = False
 
 ### 3.Start to test img.
