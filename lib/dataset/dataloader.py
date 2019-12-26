@@ -9,50 +9,13 @@ from db_config import cfg
 from lib.dataset.label_maker import make_border_map, make_score_map
 from lib.dataset.generator_enqueuer import GeneratorEnqueuer
 from lib.dataset.img_aug import crop_area, det_aug
+from lib.utils import resize_img, load_ctw1500_labels, load_icdar_labels
 
-
-def load_labels(gt_path):
-    """
-    load pts
-    :param gt_path:
-    :return: polys shape [N, 14, 2]
-    """
-    assert os.path.exists(gt_path), '{} is not exits'.format(gt_path)
-    polys = []
-    tags = []
-    with open(gt_path, 'r') as f:
-        lines = f.readlines()
-        for line in lines:
-            parts = line.strip().split(',')
-            x = float(parts[0])
-            y = float(parts[1])
-            pts = [float(i) for i in parts[4:32]]
-            poly = np.array(pts) + [x, y] * 14
-            polys.append(poly.reshape([-1, 2]))
-            tags.append(False)
-    return np.array(polys, np.float), tags
-
-
-def resize_img(img, max_size=736):
-    h, w, _ = img.shape
-
-    if max(h, w) > max_size:
-        ratio = float(max_size) / h if h > w else float(max_size) / w
-    else:
-        ratio = 1.
-
-    resize_h = int(ratio * h)
-    resize_w = int(ratio * w)
-
-    resize_h = resize_h if resize_h % 32 == 0 else abs(resize_h // 32 - 1) * 32
-    resize_w = resize_w if resize_w % 32 == 0 else abs(resize_w // 32 - 1) * 32
-    resized_img = cv2.resize(img, (int(resize_w), int(resize_h)))
-
-    ratio_h = resize_h / float(h)
-    ratio_w = resize_w / float(w)
-
-    return resized_img, (ratio_h, ratio_w)
-
+def load_labels(gt_path, data_name='ctw1500'):
+    if data_name == 'ctw1500':
+        return load_ctw1500_labels(gt_path)
+    elif data_name == 'icdar':
+        return load_icdar_labels
 
 def make_train_labels(polys, tags, h, w):
     """
