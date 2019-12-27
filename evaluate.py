@@ -2,16 +2,11 @@
 
 import os
 import cv2
-import shapely
 import tqdm
-import shutil
-import json
 import numpy as np
-import glob
-import tensorflow as tf
-from PIL import Image
 
 from inference import DB
+from db_config import cfg
 from lib.utils import quad_iou, compute_f1_score, load_ctw1500_labels, make_dir
 
 
@@ -84,16 +79,20 @@ def evaluate(gt_care_list, gt_dontcare_list, pred_list, overlap=0.5):
     return precision, recall, f1_score, TP, len(gt_care_list), len(pred_care_list), pairs_list
 
 
-def evalute_all(gt_file_dir, gt_img_dir, ckpt_path, gpuid='0'):
+def evaluate_all(gt_file_dir, gt_img_dir, ckpt_path, gpuid='0'):
     db = DB(ckpt_path, gpuid)
 
     img_list = os.listdir(gt_img_dir)
 
+    show = './eva'
+    make_dir(show)
 
     total_TP = 0
     total_gt_care_num = 0
     total_pred_care_num = 0
     for img_name in tqdm.tqdm(img_list):
+        img = cv2.imread(os.path.join(gt_img_dir, img_name))
+
         pred_box_list, pred_score_list, _ = db.detect_img(os.path.join(gt_img_dir, img_name),
                                                           ispoly=True,
                                                           show_res=False)
@@ -116,6 +115,13 @@ def evalute_all(gt_file_dir, gt_img_dir, ckpt_path, gpuid='0'):
                                                                                gt_dontcare_list,
                                                                                pred_box_list,
                                                                                overlap=0.5)
+
+        for pair in pairs_list:
+            cv2.polylines(img, [np.array(pair['gt'], np.int).reshape([-1, 1, 2])], True, (0, 255, 0))
+            cv2.polylines(img, [np.array(pair['pred'], np.int).reshape([-1, 1, 2])], True, (255, 0, 0))
+
+        cv2.imwrite(os.path.join(show, img_name), img)
+
         total_TP += TP
         total_gt_care_num += gt_care_num
         total_pred_care_num += pred_care_num
@@ -126,13 +132,14 @@ def evalute_all(gt_file_dir, gt_img_dir, ckpt_path, gpuid='0'):
 
     return total_precision, total_recall, total_f1_score
 
+if __name__ == '__main__':
 
+    ckpt_path = '/hostpersistent/zzh/lab/DB-tf/ckpt/DB_resnet_v1_50_aspp_model.ckpt-303001'
+    gt_img_dir = cfg.EVAL.IMG_DIR
+    gt_file_dir = cfg.EVAL.LABEL_DIR
 
-
-
-
-
-
+    precision, recall, f1_score = evaluate_all(gt_file_dir, gt_img_dir, ckpt_path)
+    print(precision, recall, f1_score)
 
 
 
