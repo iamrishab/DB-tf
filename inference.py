@@ -79,8 +79,6 @@ class DB():
                 res_boxes.append(box)
                 res_scores.append(scores[0][i])
         post_time = time.time()-s
-        # print('img area:', h * w)
-
 
         if show_res:
             img_name = os.path.splitext(os.path.split(img_path)[-1])[0]

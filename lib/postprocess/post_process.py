@@ -87,7 +87,7 @@ class SegDetectorRepresenter():
         height, width, _ = bitmap.shape
         contours, _ = cv2.findContours((bitmap * 255).astype(np.uint8), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
         num_contours = min(len(contours), self.max_candidates)
-        boxes = np.zeros((num_contours, 4, 2), dtype=np.int16)
+        boxes = np.zeros((num_contours, 4, 2), dtype=np.float32)
         scores = np.zeros((num_contours,), dtype=np.float32)
 
         for index in range(num_contours):
